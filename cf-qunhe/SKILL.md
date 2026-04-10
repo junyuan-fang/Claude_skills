@@ -7,6 +7,13 @@ description: Work with the internal Confluence at cf.qunhequnhe.com — read/edi
 
 Internal Confluence (cf.qunhequnhe.com) workflows using `qunhe-devops-mcp` MCP tools.
 
+## Files in this skill
+
+| File | Purpose |
+|------|---------|
+| `convert_md_to_cf.py` | Convert `markdown` macros in CF HTML to native CF HTML (tables, code blocks, bold). Run before uploading to CF. |
+| `cf_to_md.py` | Convert CF HTML to readable Markdown. Run to save a local `.md` copy. |
+
 ## Tools Available (via MCP)
 
 | Tool | Description |
@@ -25,19 +32,31 @@ Internal Confluence (cf.qunhequnhe.com) workflows using `qunhe-devops-mcp` MCP t
 
 ```
 get_confluence_page_body(url: "https://cf.qunhequnhe.com/pages/viewpage.action?pageId=...")
-# For large pages use writeToFile: true → reads to .devops-mcp-temp/<pageId>.html
+# For large pages use writeToFile: true → writes to .devops-mcp-temp/<pageId>.html
 ```
 
 ### Edit a page
 
-1. `get_confluence_page_body(writeToFile: true)` — writes to `.devops-mcp-temp/<pageId>.html`
-2. `get_confluence_page_metadata` — get current `version.number`
-3. Edit the `.html` file
+1. `get_confluence_page_body(id, writeToFile: true)`
+2. `get_confluence_page_metadata(id)` — note the current `version.number`
+3. Edit `.devops-mcp-temp/<pageId>.html`
 4. `update_confluence_page(id, bodyFile, version: {number: current+1, message: "..."})`
 
-### Add a task list (todo) before a section
+### Fix markdown macros + save as .md (full workflow)
 
-Insert before the target `<h1>`:
+```bash
+# 1. Fetch page via MCP (writeToFile: true) → .devops-mcp-temp/<pageId>.html
+
+# 2. Convert markdown macros to native CF HTML, then upload
+#    Copy convert_md_to_cf.py to project, update INPUT/OUTPUT paths at bottom, run:
+python convert_md_to_cf.py
+
+# 3. Save page as local markdown
+#    Copy cf_to_md.py to project, update paths, run:
+python cf_to_md.py
+```
+
+### Add a task list (todo) before a section
 
 ```html
 <h2>待办事项</h2>
@@ -49,74 +68,125 @@ Insert before the target `<h1>`:
 </ac:task-list>
 ```
 
+---
+
+## convert_md_to_cf.py — Conversion Rules
+
+Converts all `<ac:structured-macro ac:name="markdown">` blocks to native Confluence HTML so users can add inline comments.
+
+### Inline formatting
+
+| Markdown | CF HTML |
+|----------|---------|
+| `**text**` | `<strong>text</strong>` |
+| `` `code` `` | `<code>code</code>` |
+
+**Important:** escape `<` → `&lt;` and `>` → `&gt;` in plain text **before** applying bold/code. Code span content is also escaped. This prevents CF XML parser errors (e.g. `alpha > 0.5` would break the upload).
+
+### Headings
+
+Markdown `#` levels are shifted down by 1 to fit inside existing CF page structure:
+- `#` → `<h2>`, `##` → `<h3>`, `###` → `<h4>`, `####` → `<p><strong>...</strong></p>`
+
+### Tables
+
+```
+| col1 | col2 |    →    <table><tbody>
+|------|------|              <tr><th><p>col1</p></th><th><p>col2</p></th></tr>
+| a    | b    |              <tr><td><p>a</p></td><td><p>b</p></td></tr>
+                        </tbody></table>
+```
+
+Cells with nested lists (e.g. `<ul>` inside `<td>`) are flattened to inline text using `<br>` separators — Confluence renders these correctly in table cells.
+
+### Code fences
+
+````
+```json          →    <ac:structured-macro ac:name="code">
+{...}                   <ac:parameter ac:name="language">json</ac:parameter>
+```                     <ac:plain-text-body><![CDATA[{...}]]></ac:plain-text-body>
+                      </ac:structured-macro>
+````
+
+Language tag is preserved (json, python, bash, etc.). Plain ` ``` ` (no language) produces a code macro with no language attribute.
+
+### Lists
+
+Unordered (`- item`) and ordered (`1. item`) lists, including nested (indent-based), are converted to `<ul>/<ol><li>` HTML.
+
+### Other elements
+
+| Markdown | CF HTML |
+|----------|---------|
+| `> quote` | `<blockquote><p>quote</p></blockquote>` |
+| `---` | `<hr/>` |
+| blank line | `<p><br/></p>` |
+| plain text line | `<p>text</p>` |
+
+---
+
+## cf_to_md.py — Conversion Rules
+
+Converts CF storage HTML to readable GitHub-flavored Markdown.
+
+### Element mapping
+
+| CF Element | Markdown output |
+|------------|----------------|
+| `<ac:structured-macro name="mermaid-macro">` | ` ```mermaid ... ``` ` code block |
+| `<ac:structured-macro name="expand">` | `<details><summary>title</summary>...</details>` |
+| `<ac:task-list>` / `<ac:task>` | `- [ ] task` / `- [x] task` |
+| `<ac:structured-macro name="code">` | ` ```lang ... ``` ` |
+| `<ac:image>` | `[image]` placeholder |
+| `<h1>`–`<h6>` | `#`–`######` headings |
+| `<table>` | Markdown pipe table |
+| `<strong>` | `**text**` |
+| `<code>` | `` `text` `` |
+| `<blockquote>` | `> text` |
+| `<ul>/<li>` | `- item` |
+| `<br>` inside `<td>` | preserved as `<br>` (markdown tables support this) |
+
+### Tricky parts
+
+**Table cells with nested content:** List items and paragraphs inside `<td>` are joined with `<br>` so the table row stays on one line. Uses a `\x00BR\x00` placeholder to survive the final tag-strip pass.
+
+**`<details>` tags:** Also use `\x00DETAILS_OPEN\x00` / `\x00DETAILS_CLOSE\x00` placeholders so they aren't removed by the final `re.sub(r'<[^>]+>', '', html)` tag-strip.
+
+**HTML entity unescaping** (applied at the end):
+`&lt;` → `<`, `&gt;` → `>`, `&amp;` → `&`, `&nbsp;` → ` `, `&rarr;` → `→`, etc.
+
+---
+
 ## Known Gotchas
 
 ### robot-mobot permissions
 
-MCP acts as `robot-mobot`. If you get 404 → add robot-mobot as **View**. If you get 403 on update → add robot-mobot as **Edit**.
+MCP acts as `robot-mobot`. 404 → grant **View**. 403 on update → grant **Edit**.
 
 Page → `...` → Page Restrictions → add `robot-mobot`
 
-### Mermaid macro: autonumber not supported
-
-The MCP validator rejects `autonumber` in sequence diagrams. Remove it before updating:
+### Mermaid: autonumber + actor not supported by MCP validator
 
 ```python
-# In Python: strip autonumber lines
 content = re.sub(r'\s*autonumber\n', '', content)
+content = content.replace('actor ', 'participant ')
 ```
 
-### mermaid-macro: actor keyword not supported
+### Version conflict on update
 
-Replace `actor <name>` with `participant <name>` in sequence diagrams before pushing via MCP.
+If you get `409 Version must be incremented`, re-fetch with `get_confluence_page_metadata` to get the latest version number — someone else may have edited the page.
 
-### Markdown macros block inline comments
-
-Content inside `<ac:structured-macro ac:name="markdown">` cannot receive inline comments. Convert to native CF HTML instead. Key conversions:
-
-- `**text**` → `<strong>text</strong>`
-- `` `code` `` → `<code>code</code>`
-- Markdown tables → `<table><tbody>...</tbody></table>`
-- ` ```lang ``` ` code fences → `<ac:structured-macro ac:name="code"><ac:parameter ac:name="language">lang</ac:parameter><ac:plain-text-body><![CDATA[...]]></ac:plain-text-body></ac:structured-macro>`
-- Always escape `<` → `&lt;` and `>` → `&gt;` in text content (e.g. `alpha > 0.5` breaks CF XML parser)
-
-### Table cells with nested lists
-
-Use `<br>` inside table cells to separate list items inline — Confluence renders this correctly.
-
-## Save CF Page as Markdown
-
-Use the conversion scripts in `.devops-mcp-temp/`:
-
-```bash
-# 1. Fetch page
-# get_confluence_page_body(id: <pageId>, writeToFile: true)
-
-# 2. Convert markdown macros to native HTML (for CF update)
-python .devops-mcp-temp/convert.py
-
-# 3. Convert CF HTML to markdown (for local .md file)
-python .devops-mcp-temp/to_md.py
-```
-
-Output: `docs/physics_annotation_design.md`
-
-Mermaid diagrams are preserved as ` ```mermaid ``` ` blocks.
-Expand macros become `<details><summary>title</summary>...</details>`.
+---
 
 ## Confluence CLI (alternative)
 
-For personal-account operations (search, export, comments), use `@qunhe/confluence-cli`:
+For personal-account operations (search, export, comments):
 
 ```bash
-# Install
 npm install --global @qunhe/confluence-cli --registry "http://npm-registry.qunhequnhe.com"
+export CONFLUENCE_TOKEN="<pat from cf.qunhequnhe.com/plugins/personalaccesstokens/usertokens.action>"
 
-# Read page
 confluence read https://cf.qunhequnhe.com/pages/viewpage.action?pageId=81435845292
-
-# Update page from markdown file
-confluence update -f docs/physics_annotation_design.md
+confluence update -f docs/design.md
+confluence search "keyword"
 ```
-
-Requires `CONFLUENCE_TOKEN` env var (personal access token from cf.qunhequnhe.com/plugins/personalaccesstokens/usertokens.action).
