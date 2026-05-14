@@ -2,6 +2,10 @@
 # 安装: crontab -e , 把下面几行粘进去
 # 路径用绝对路径, 因为 cron 的 PATH 很简陋
 
+# ⚠️ 必须在 crontab 顶部先放这行, 否则 python 脚本里的 `claude -p` 调用会找不到 claude:
+PATH=/home/a/.local/bin:/home/a/miniforge3/bin:/usr/local/bin:/usr/bin:/bin
+PYTHONIOENCODING=utf-8
+
 # 每小时增量索引一次 (新会话/新消息会被纳入)
 0 * * * * /home/a/miniforge3/bin/python3 /home/xinmiao/code/Claude_skills/_tools/scripts/index-sessions.py >> /home/xinmiao/code/Claude_skills/_tools/data/cron.log 2>&1
 
