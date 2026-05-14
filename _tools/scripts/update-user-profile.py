@@ -123,6 +123,8 @@ def main() -> int:
                     help="discard existing profile, build from scratch")
     ap.add_argument("--dry-run", action="store_true",
                     help="print prompt instead of calling claude")
+    ap.add_argument("--commit", action="store_true",
+                    help="git commit + try git push if profile files changed")
     args = ap.parse_args()
 
     if not args.db.exists():
@@ -179,6 +181,33 @@ def main() -> int:
             header = f"<!-- user_key: {uk} ({len(urows)} turns) -->\n"
             fpath.write_text(header + new + "\n", encoding="utf-8")
             print(f"    + {fpath.relative_to(REPO_ROOT)}  ({len(urows)} turns)")
+
+    if args.commit:
+        try:
+            subprocess.run(["git", "-C", str(REPO_ROOT), "add", "-A",
+                            "_tools/data/user-profile.md",
+                            "_tools/data/profiles/"],
+                           capture_output=True)
+            r = subprocess.run(["git", "-C", str(REPO_ROOT), "diff",
+                                "--cached", "--quiet"], capture_output=True)
+            if r.returncode != 0:
+                subprocess.run(
+                    ["git", "-C", str(REPO_ROOT), "commit", "-m",
+                     f"profile: auto refresh {dt.datetime.now():%Y-%m-%d}"],
+                    capture_output=True, check=True,
+                )
+                push = subprocess.run(
+                    ["git", "-C", str(REPO_ROOT), "push"],
+                    capture_output=True, timeout=60,
+                )
+                if push.returncode == 0:
+                    print("  ✓ committed + pushed")
+                else:
+                    print("  ✓ committed; push failed (will retry next time)")
+            else:
+                print("  no profile changes to commit")
+        except Exception as e:
+            print(f"  commit step error: {e}", file=sys.stderr)
 
     return 0
 

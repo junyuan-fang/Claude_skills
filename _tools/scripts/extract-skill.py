@@ -306,6 +306,16 @@ def main() -> int:
                 check=True, capture_output=True,
             )
             print(f"  git committed.")
+            push = subprocess.run(
+                ["git", "-C", str(REPO_ROOT), "push"],
+                capture_output=True, timeout=60,
+            )
+            if push.returncode == 0:
+                print(f"  ✓ pushed to remote")
+            else:
+                err = push.stderr.decode(errors="replace")[:200]
+                print(f"  push failed (commit kept locally): {err.strip()}",
+                      file=sys.stderr)
         except subprocess.CalledProcessError as e:
             err = e.stderr.decode() if e.stderr else str(e)
             print(f"  git commit skipped: {err.strip()}", file=sys.stderr)

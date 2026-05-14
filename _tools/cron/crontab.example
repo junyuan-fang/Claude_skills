@@ -12,8 +12,11 @@ PYTHONIOENCODING=utf-8
 # 每天 03:10 归档昨天的对话到 _tools/data/archive/<date>.md
 10 3 * * * /home/a/miniforge3/bin/python3 /home/xinmiao/code/Claude_skills/_tools/scripts/archive-session.py --date $(date -d 'yesterday' +\%Y-\%m-\%d) >> /home/xinmiao/code/Claude_skills/_tools/data/cron.log 2>&1
 
-# 每天 03:30 从昨天的对话里提炼新 skill (写到 repo 根, 自动 git commit)
+# 每天 03:30 从昨天的对话里提炼新 skill (自动 commit + push)
 30 3 * * * /home/a/miniforge3/bin/python3 /home/xinmiao/code/Claude_skills/_tools/scripts/extract-skill.py --date $(date -d 'yesterday' +\%Y-\%m-\%d) >> /home/xinmiao/code/Claude_skills/_tools/data/cron.log 2>&1
 
-# 每天 04:00 更新用户画像 (merged + per-user, 基于近 7 天)
-0 4 * * * /home/a/miniforge3/bin/python3 /home/xinmiao/code/Claude_skills/_tools/scripts/update-user-profile.py --days 7 --per-user >> /home/xinmiao/code/Claude_skills/_tools/data/cron.log 2>&1
+# 每天 04:00 更新用户画像 (merged + per-user, 自动 commit + push)
+0 4 * * * /home/a/miniforge3/bin/python3 /home/xinmiao/code/Claude_skills/_tools/scripts/update-user-profile.py --days 7 --per-user --commit >> /home/xinmiao/code/Claude_skills/_tools/data/cron.log 2>&1
+
+# 04:50 兜底同步: 把所有未推的 commit 一并推上去 (网络抖动时的安全网)
+50 4 * * * /home/xinmiao/code/Claude_skills/_tools/scripts/daily-sync.sh >> /home/xinmiao/code/Claude_skills/_tools/data/cron.log 2>&1
