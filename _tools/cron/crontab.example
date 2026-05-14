@@ -11,5 +11,5 @@
 # 每天 03:30 从昨天的对话里提炼新 skill (写到 repo 根, 自动 git commit)
 30 3 * * * /home/a/miniforge3/bin/python3 /home/xinmiao/code/Claude_skills/_tools/scripts/extract-skill.py --date $(date -d 'yesterday' +\%Y-\%m-\%d) >> /home/xinmiao/code/Claude_skills/_tools/data/cron.log 2>&1
 
-# 每天 04:00 更新用户画像 (基于近 7 天)
-0 4 * * * /home/a/miniforge3/bin/python3 /home/xinmiao/code/Claude_skills/_tools/scripts/update-user-profile.py --days 7 >> /home/xinmiao/code/Claude_skills/_tools/data/cron.log 2>&1
+# 每天 04:00 更新用户画像 (merged + per-user, 基于近 7 天)
+0 4 * * * /home/a/miniforge3/bin/python3 /home/xinmiao/code/Claude_skills/_tools/scripts/update-user-profile.py --days 7 --per-user >> /home/xinmiao/code/Claude_skills/_tools/data/cron.log 2>&1

@@ -149,6 +149,41 @@ def slugify(s: str) -> str:
     return s.strip("-")[:64] or "untitled"
 
 
+MERGE_PROMPT = """已有一个 SKILL.md, 现在又从新的对话里提炼出关于**同一主题**的更新版本。请把两者合并成一个更完善的 SKILL.md。
+
+要求:
+- **保留旧版的有效信息**, 除非新对话明确否定它
+- **吸收新版的补充和修正**
+- 不要重复, 不要删减步骤变成更模糊的版本
+- 步骤、命令、路径要具体
+- 输出**完整 markdown**, 不要 ``` 包裹, 不要解释
+
+=== 旧版 SKILL.md ===
+{old}
+=== 结束 ===
+
+=== 新提炼的内容 (frontmatter 字段) ===
+title: {title}
+description: {desc}
+keywords: {kws}
+body:
+{body}
+=== 结束 ===
+
+直接输出合并后的完整 SKILL.md (包括 frontmatter):
+"""
+
+
+def _frontmatter_str(slug, desc, kws, source_label, version):
+    return (f"---\nname: {slug}\n"
+            f"description: {desc}\n"
+            f"trigger_keywords: [{', '.join(json.dumps(k, ensure_ascii=False) for k in kws)}]\n"
+            f"source: {source_label}\n"
+            f"version: {version}\n"
+            f"updated_at: {datetime.now().isoformat(timespec='seconds')}\n"
+            f"---\n\n")
+
+
 def write_skill(skill: dict, source_label: str) -> Path | None:
     slug = slugify(skill.get("slug") or skill.get("title") or "untitled")
     if not slug:
@@ -161,19 +196,44 @@ def write_skill(skill: dict, source_label: str) -> Path | None:
     kws = skill.get("trigger_keywords", []) or []
     body = skill.get("body", "")
 
-    md = f"""---
-name: {slug}
-description: {desc}
-trigger_keywords: [{', '.join(json.dumps(k, ensure_ascii=False) for k in kws)}]
-source: {source_label}
-extracted_at: {datetime.now().isoformat(timespec='seconds')}
----
-
-# {title}
-
-{body.strip()}
-"""
     path = skill_dir / "SKILL.md"
+
+    if path.exists():
+        # SAME-SLUG MERGE: ask claude to combine old + new
+        old = path.read_text(encoding="utf-8")
+        prev_version = 1
+        m = re.search(r"^version:\s*(\d+)", old, re.MULTILINE)
+        if m:
+            prev_version = int(m.group(1))
+        new_version = prev_version + 1
+
+        merge_prompt = MERGE_PROMPT.format(
+            old=old, title=title, desc=desc, kws=kws, body=body,
+        )
+        merged = call_claude(merge_prompt).strip()
+        merged = re.sub(r"^```(?:markdown|md)?\s*", "", merged)
+        merged = re.sub(r"\s*```\s*$", "", merged)
+        if not merged.startswith("---"):
+            # fallback: rebuild frontmatter + use merged as body
+            merged = _frontmatter_str(slug, desc, kws, source_label, new_version) + merged
+
+        # ensure version is updated even if LLM forgot
+        merged = re.sub(r"^version:\s*\d+",
+                        f"version: {new_version}",
+                        merged, count=1, flags=re.MULTILINE)
+        if "version:" not in merged.split("---", 2)[1] if merged.startswith("---") else True:
+            # no version field → inject
+            merged = re.sub(r"(^---\n)",
+                            f"\\1version: {new_version}\n", merged,
+                            count=1, flags=re.MULTILINE)
+        path.write_text(merged + ("\n" if not merged.endswith("\n") else ""),
+                        encoding="utf-8")
+        print(f"  ↻ merged into existing {slug}/SKILL.md (v{new_version})")
+        return path
+
+    # NEW SKILL
+    md = (_frontmatter_str(slug, desc, kws, source_label, version=1)
+          + f"# {title}\n\n{body.strip()}\n")
     path.write_text(md, encoding="utf-8")
     return path
 

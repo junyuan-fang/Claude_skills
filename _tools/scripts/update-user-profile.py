@@ -82,9 +82,22 @@ def gather(conn, days: int, user_filter: str | None) -> list:
     if user_filter:
         where.append("user_key LIKE ?")
         params.append(f"%{user_filter}%")
-    sql = ("SELECT timestamp, role, content, user_name FROM turns "
+    sql = ("SELECT timestamp, role, content, user_name, user_key FROM turns "
            f"WHERE {' AND '.join(where)} ORDER BY timestamp")
     return conn.execute(sql, params).fetchall()
+
+
+def all_users(conn, days: int) -> list[str]:
+    since = (dt.datetime.now() - dt.timedelta(days=days)).isoformat()
+    rows = conn.execute(
+        "SELECT DISTINCT user_key FROM turns WHERE timestamp >= ? AND user_key != '' "
+        "ORDER BY user_key", (since,)).fetchall()
+    return [r[0] for r in rows]
+
+
+def safe_filename(user_key: str) -> str:
+    """user_key looks like 'weixin:dm:xxx@im.wechat'. Convert to filesystem-safe name."""
+    return re.sub(r"[^a-zA-Z0-9._-]+", "_", user_key).strip("_")[:80]
 
 
 def call_claude(prompt: str) -> str:
@@ -99,9 +112,13 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--db", type=Path, default=DEFAULT_DB)
-    ap.add_argument("--profile", type=Path, default=DEFAULT_PROFILE)
+    ap.add_argument("--profile", type=Path, default=DEFAULT_PROFILE,
+                    help="path for the merged-all-users profile (default mode)")
     ap.add_argument("--days", type=int, default=7)
     ap.add_argument("--user", help="user_key substring filter")
+    ap.add_argument("--per-user", action="store_true",
+                    help="generate one profile per user under data/profiles/<user>.md "
+                         "(in addition to the merged one)")
     ap.add_argument("--reset", action="store_true",
                     help="discard existing profile, build from scratch")
     ap.add_argument("--dry-run", action="store_true",
@@ -112,50 +129,69 @@ def main() -> int:
         print(f"db not found: {args.db}", file=sys.stderr)
         return 1
 
+    conn = sqlite3.connect(args.db)
+    conn.row_factory = sqlite3.Row
+
+    # 1. merged profile (existing behavior)
     args.profile.parent.mkdir(parents=True, exist_ok=True)
     existing = (EMPTY_PROFILE if args.reset or not args.profile.exists()
                 else args.profile.read_text(encoding="utf-8"))
 
-    conn = sqlite3.connect(args.db)
-    conn.row_factory = sqlite3.Row
     rows = gather(conn, args.days, args.user)
     if not rows:
         print(f"(no turns in last {args.days} days)")
-        return 0
-    print(f"  using {len(rows)} turns from last {args.days} day(s)…")
+    else:
+        print(f"  [merged] using {len(rows)} turns from last {args.days} day(s)…")
+        transcript = render_transcript(rows)
+        prompt = PROMPT_TEMPLATE.format(existing=existing, transcript=transcript)
+        if args.dry_run:
+            print(prompt); return 0
+        new = call_claude(prompt)
+        if new:
+            new = re.sub(r"^```(?:markdown|md)?\s*", "", new)
+            new = re.sub(r"\s*```\s*$", "", new)
+            backup = args.profile.with_suffix(".md.bak")
+            if args.profile.exists():
+                backup.write_text(args.profile.read_text(encoding="utf-8"),
+                                  encoding="utf-8")
+            args.profile.write_text(new + "\n", encoding="utf-8")
+            print(f"  + updated {args.profile.relative_to(REPO_ROOT)}")
 
+    # 2. per-user profiles (new feature)
+    if args.per_user:
+        profiles_dir = args.profile.parent / "profiles"
+        profiles_dir.mkdir(parents=True, exist_ok=True)
+        users = all_users(conn, args.days)
+        print(f"\n  [per-user] {len(users)} user(s) in last {args.days} day(s):")
+        for uk in users:
+            fname = safe_filename(uk) + ".md"
+            fpath = profiles_dir / fname
+            existing_u = (EMPTY_PROFILE if args.reset or not fpath.exists()
+                          else fpath.read_text(encoding="utf-8"))
+            urows = gather(conn, args.days, uk)
+            if not urows: continue
+            transcript = render_transcript(urows)
+            prompt = PROMPT_TEMPLATE.format(existing=existing_u, transcript=transcript)
+            new = call_claude(prompt)
+            if not new: continue
+            new = re.sub(r"^```(?:markdown|md)?\s*", "", new)
+            new = re.sub(r"\s*```\s*$", "", new)
+            header = f"<!-- user_key: {uk} ({len(urows)} turns) -->\n"
+            fpath.write_text(header + new + "\n", encoding="utf-8")
+            print(f"    + {fpath.relative_to(REPO_ROOT)}  ({len(urows)} turns)")
+
+    return 0
+
+
+def render_transcript(rows) -> str:
     transcript = "\n\n".join(
         f"[{r['timestamp'][:19]}] {r['role']} ({r['user_name'] or '-'}): "
         f"{r['content']}"
         for r in rows
     )
-    # cap
     if len(transcript) > 60000:
         transcript = transcript[-60000:]
-
-    prompt = PROMPT_TEMPLATE.format(existing=existing, transcript=transcript)
-
-    if args.dry_run:
-        print(prompt)
-        return 0
-
-    new = call_claude(prompt)
-    if not new:
-        print("ERROR: claude returned empty", file=sys.stderr)
-        return 2
-
-    # strip any accidental fences
-    new = re.sub(r"^```(?:markdown|md)?\s*", "", new)
-    new = re.sub(r"\s*```\s*$", "", new)
-
-    backup = args.profile.with_suffix(".md.bak")
-    if args.profile.exists():
-        backup.write_text(args.profile.read_text(encoding="utf-8"),
-                          encoding="utf-8")
-    args.profile.write_text(new + "\n", encoding="utf-8")
-    print(f"  + updated {args.profile.relative_to(REPO_ROOT)}")
-    print(f"    (previous saved to {backup.name})")
-    return 0
+    return transcript
 
 
 if __name__ == "__main__":

@@ -1,0 +1,9 @@
+{
+  "_comment": "Maps a real person to all their platform user_keys. Used by cross-platform-context.py to inject context from other platforms. Add a person when they appear on a second platform.",
+  "junyuan": [
+    "weixin:dm:o9cq80_APG37pAgbjUuI0jNs1g2E@im.wechat"
+  ],
+  "xinmiao": [
+    "weixin:dm:o9cq806Pv4Ad1AUh8SNLbm9IoBeY@im.wechat"
+  ]
+}
