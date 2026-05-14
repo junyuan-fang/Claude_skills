@@ -1,0 +1,15 @@
+# Claude_skills cron 示例
+# 安装: crontab -e , 把下面几行粘进去
+# 路径用绝对路径, 因为 cron 的 PATH 很简陋
+
+# 每小时增量索引一次 (新会话/新消息会被纳入)
+0 * * * * /home/a/miniforge3/bin/python3 /home/xinmiao/code/Claude_skills/scripts/index-sessions.py >> /home/xinmiao/code/Claude_skills/data/cron.log 2>&1
+
+# 每天 03:10 归档昨天的对话到 data/archive/<date>.md
+10 3 * * * /home/a/miniforge3/bin/python3 /home/xinmiao/code/Claude_skills/scripts/archive-session.py --date $(date -d 'yesterday' +\%Y-\%m-\%d) >> /home/xinmiao/code/Claude_skills/data/cron.log 2>&1
+
+# 每天 03:30 从昨天的对话里提炼新 skill (会自动 git commit)
+30 3 * * * /home/a/miniforge3/bin/python3 /home/xinmiao/code/Claude_skills/scripts/extract-skill.py --date $(date -d 'yesterday' +\%Y-\%m-\%d) >> /home/xinmiao/code/Claude_skills/data/cron.log 2>&1
+
+# 每天 04:00 更新用户画像 (基于近 7 天)
+0 4 * * * /home/a/miniforge3/bin/python3 /home/xinmiao/code/Claude_skills/scripts/update-user-profile.py --days 7 >> /home/xinmiao/code/Claude_skills/data/cron.log 2>&1

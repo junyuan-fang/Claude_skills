@@ -1,0 +1,257 @@
+#!/usr/bin/env python3
+"""
+LLM-driven skill extraction: feed a slice of session history to Claude
+and ask it to distill any **reusable workflows** into Claude Code skill
+files (the SKILL.md format).
+
+Usage:
+    extract-skill.py --session s1            # extract from one session
+    extract-skill.py --date 2026-05-14       # all turns from a date
+    extract-skill.py --since 2026-05-10      # since a date
+    extract-skill.py --query "weixin setup"  # turns matching FTS query
+    extract-skill.py --dry-run               # print the prompt, don't call claude
+
+What it does:
+    1. Pull matching turns from sessions.db
+    2. Prompt Claude (via local CLI) to identify "this is something the user
+       did more than once / would do again", and write a SKILL.md for each
+    3. Save each skill to <repo>/skills/<slug>/SKILL.md
+    4. git-commit (you push separately)
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import sqlite3
+import subprocess
+import sys
+import textwrap
+from datetime import datetime
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_DB = REPO_ROOT / "data" / "sessions.db"
+SKILLS_DIR = REPO_ROOT / "skills"
+
+
+PROMPT_TEMPLATE = """你是一个 skill 提炼助手。下面是用户最近的若干轮对话历史(role=user 是用户的请求, role=assistant 是 AI 助手 Claude 的回复)。
+
+请仔细阅读,识别出**所有"用户多次做、或者将来会反复用到"的具体工作流/技巧**,然后为每个这样的工作流生成一份 Claude Code 风格的 SKILL.md 文件。
+
+判定标准(都满足才算):
+- 是一个**完整可复现**的小流程(不是知识陈述)
+- **超过 3 行**的操作步骤,或包含**特定命令/参数/路径**
+- 用户给出过明确的"以后这样做"或类似确认,**或**这个操作 解决了一个实际问题
+
+不要生成的内容:
+- 笼统的最佳实践、纯讲解、原理说明
+- 一次性配置(写完就不再用的)
+- AI 自己提议但用户没采纳的
+
+输出格式(严格遵守, JSON list, 每个对象一个 skill):
+
+```json
+[
+  {{
+    "slug": "kebab-case-name",
+    "title": "短标题(中文也行)",
+    "description": "一句话描述: 什么时候用这个 skill",
+    "trigger_keywords": ["关键词1", "关键词2"],
+    "body": "## 步骤\\n\\n1. ...\\n2. ...\\n\\n## 注意\\n\\n..."
+  }}
+]
+```
+
+如果没有任何值得提炼的工作流,直接输出 `[]`。
+
+不要输出任何解释、寒暄、markdown 块外的文字。只输出 JSON。
+
+=== 对话历史 ===
+{transcript}
+=== 结束 ===
+"""
+
+
+def gather_turns(conn: sqlite3.Connection, args) -> list[sqlite3.Row]:
+    where, params = [], []
+    if args.session:
+        where.append("session_id = ?"); params.append(args.session)
+    if args.date:
+        where.append("substr(timestamp,1,10) = ?"); params.append(args.date)
+    if args.since:
+        where.append("timestamp >= ?"); params.append(args.since)
+    if args.until:
+        where.append("timestamp < ?"); params.append(args.until)
+
+    if args.query:
+        tokens = re.findall(r"\S+", args.query)
+        fts = " ".join('"' + t.replace('"', '""') + '"' for t in tokens)
+        sql = ("SELECT t.* FROM turns t JOIN turns_fts f ON f.rowid=t.id "
+               "WHERE turns_fts MATCH ?")
+        params = [fts] + params
+    else:
+        sql = "SELECT * FROM turns WHERE 1=1"
+
+    if where:
+        sql += " AND " + " AND ".join(where)
+    sql += " ORDER BY timestamp"
+    return conn.execute(sql, params).fetchall()
+
+
+def render_transcript(rows) -> str:
+    lines = []
+    for r in rows:
+        ts = r["timestamp"][:19]
+        lines.append(f"[{ts}] {r['role']}: {r['content']}")
+    return "\n\n".join(lines)
+
+
+def call_claude(prompt: str) -> str:
+    try:
+        result = subprocess.run(
+            ["claude", "-p", prompt],
+            capture_output=True, text=True, timeout=300,
+        )
+        return result.stdout
+    except FileNotFoundError:
+        print("ERROR: claude CLI not found", file=sys.stderr)
+        sys.exit(2)
+    except subprocess.TimeoutExpired:
+        print("ERROR: claude timeout", file=sys.stderr)
+        sys.exit(2)
+
+
+def parse_skills(output: str) -> list[dict]:
+    # find first [ ... ] block; tolerate wrappers
+    m = re.search(r"\[\s*(?:\{.*?\}\s*,?\s*)*\]", output, re.DOTALL)
+    if not m:
+        # try a fenced json block
+        m2 = re.search(r"```(?:json)?\s*(\[.*?\])\s*```", output, re.DOTALL)
+        raw = m2.group(1) if m2 else output
+    else:
+        raw = m.group(0)
+    try:
+        skills = json.loads(raw)
+    except json.JSONDecodeError as e:
+        print(f"WARN: failed to parse skills JSON: {e}", file=sys.stderr)
+        print("--- raw output ---", file=sys.stderr)
+        print(output[:2000], file=sys.stderr)
+        return []
+    if not isinstance(skills, list):
+        return []
+    return skills
+
+
+def slugify(s: str) -> str:
+    s = re.sub(r"[^a-zA-Z0-9一-龥]+", "-", s.strip().lower())
+    return s.strip("-")[:64] or "untitled"
+
+
+def write_skill(skill: dict, source_label: str) -> Path | None:
+    slug = slugify(skill.get("slug") or skill.get("title") or "untitled")
+    if not slug:
+        return None
+    skill_dir = SKILLS_DIR / slug
+    skill_dir.mkdir(parents=True, exist_ok=True)
+
+    title = skill.get("title", slug)
+    desc = skill.get("description", "")
+    kws = skill.get("trigger_keywords", []) or []
+    body = skill.get("body", "")
+
+    md = f"""---
+name: {slug}
+description: {desc}
+trigger_keywords: [{', '.join(json.dumps(k, ensure_ascii=False) for k in kws)}]
+source: {source_label}
+extracted_at: {datetime.now().isoformat(timespec='seconds')}
+---
+
+# {title}
+
+{body.strip()}
+"""
+    path = skill_dir / "SKILL.md"
+    path.write_text(md, encoding="utf-8")
+    return path
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--db", type=Path, default=DEFAULT_DB)
+    g = ap.add_argument_group("source filter (combinable)")
+    g.add_argument("--session", help="session_id")
+    g.add_argument("--date", help="YYYY-MM-DD")
+    g.add_argument("--since")
+    g.add_argument("--until")
+    g.add_argument("--query", help="FTS query")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="only print the prompt, don't call claude")
+    ap.add_argument("--no-commit", action="store_true",
+                    help="skip git commit after writing skills")
+    args = ap.parse_args()
+
+    if not args.db.exists():
+        print(f"db not found: {args.db}", file=sys.stderr)
+        return 1
+
+    conn = sqlite3.connect(args.db)
+    conn.row_factory = sqlite3.Row
+    rows = gather_turns(conn, args)
+    if not rows:
+        print("(no turns match)")
+        return 0
+    print(f"  feeding {len(rows)} turns to claude…")
+
+    transcript = render_transcript(rows)
+    # cap transcript at ~50k chars to avoid context overflow
+    if len(transcript) > 50000:
+        transcript = transcript[-50000:]
+        print(f"  (truncated to last 50k chars)")
+
+    prompt = PROMPT_TEMPLATE.format(transcript=transcript)
+
+    if args.dry_run:
+        print(prompt)
+        return 0
+
+    raw = call_claude(prompt)
+    skills = parse_skills(raw)
+    if not skills:
+        print("  (no skills extracted)")
+        return 0
+
+    src_label = (f"session={args.session}" if args.session else
+                 f"date={args.date}" if args.date else
+                 f"since={args.since}" if args.since else
+                 f"query={args.query}" if args.query else "all")
+
+    written = []
+    for s in skills:
+        p = write_skill(s, src_label)
+        if p:
+            print(f"  + {p.relative_to(REPO_ROOT)}")
+            written.append(p)
+
+    if written and not args.no_commit:
+        try:
+            subprocess.run(["git", "-C", str(REPO_ROOT), "add", "skills/"],
+                           check=True, capture_output=True)
+            subprocess.run(
+                ["git", "-C", str(REPO_ROOT), "commit", "-m",
+                 f"skills: extract {len(written)} skill(s) from {src_label}"],
+                check=True, capture_output=True,
+            )
+            print(f"  git committed.")
+        except subprocess.CalledProcessError as e:
+            err = e.stderr.decode() if e.stderr else str(e)
+            print(f"  git commit skipped: {err.strip()}", file=sys.stderr)
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
