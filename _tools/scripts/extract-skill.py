@@ -31,9 +31,9 @@ import textwrap
 from datetime import datetime
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_DB = REPO_ROOT / "data" / "sessions.db"
-SKILLS_DIR = REPO_ROOT / "skills"
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent  # _tools/scripts/ → repo root
+DEFAULT_DB = REPO_ROOT / "_tools" / "data" / "sessions.db"
+SKILLS_DIR = REPO_ROOT  # each skill is a top-level dir at repo root
 
 
 PROMPT_TEMPLATE = """你是一个 skill 提炼助手。下面是用户最近的若干轮对话历史(role=user 是用户的请求, role=assistant 是 AI 助手 Claude 的回复)。
@@ -238,7 +238,7 @@ def main() -> int:
 
     if written and not args.no_commit:
         try:
-            subprocess.run(["git", "-C", str(REPO_ROOT), "add", "skills/"],
+            subprocess.run(["git", "-C", str(REPO_ROOT), "add", "-A"],
                            check=True, capture_output=True)
             subprocess.run(
                 ["git", "-C", str(REPO_ROOT), "commit", "-m",

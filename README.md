@@ -1,67 +1,70 @@
 # Claude_skills
 
-个人 Claude Code 工作流积累:
-**对话归档 + FTS 全文检索 + 自动技能提炼 + 用户偏好建模**。
+个人 Claude Code skills 合集 + 工作流积累工具。
 
-补足 cc-connect (Claude × IM 桥接) 相对 Hermes Agent 的几个关键能力缺失。
+每个**顶层目录**(除 `_tools/`)是一个独立 skill,内含 `SKILL.md`(YAML frontmatter + 正文)。
+clone 到 `~/.claude/skills/` 后可被 Claude Code 自动发现。
 
-## 目录
+## 已有 Skills
+
+| Skill | 来源 | 说明 |
+|---|---|---|
+| **confluence** | 手写 | 通过 `@qunhe/confluence-cli` 读写搜索 Confluence 页面 |
+| **cf-qunhe** | 手写 | 群核内部 Confluence (cf.qunhequnhe.com) MCP 工作流: mermaid/markdown 宏处理、页面 ↔ markdown 转换 |
+| **cc-connect-daily-cron** | 自动提炼 | 用 cc-connect 创建每日定时新闻推送(微信) |
+| **wechat-image-rich-reply** | 自动提炼 | 微信通道资讯类回复优先图文并茂 |
+
+## `_tools/` — 工作流积累基础设施
 
 ```
-.
+_tools/
 ├── scripts/
-│   ├── archive-session.py     # cc-connect sessions JSON → 当日 markdown 存档
-│   ├── index-sessions.py      # SQLite FTS5 索引所有历史会话
-│   ├── query-history.py       # CLI 检索: 关键词 / 时间 / 平台
-│   ├── extract-skill.py       # LLM 把一段对话提炼成可复用 skill
-│   └── update-user-profile.py # LLM 根据近 N 天对话更新用户画像
-├── skills/                    # 自动提炼出的技能 (用 Claude 的 SKILL.md 格式)
-├── data/
-│   ├── sessions.db            # FTS5 索引数据库
-│   └── user-profile.md        # 当前用户画像快照
-└── cron/
-    └── crontab.example        # 定时任务示例
+│   ├── index-sessions.py        # 把 cc-connect session JSON → SQLite FTS5
+│   ├── query-history.py         # 命令行历史检索 (可选 LLM 摘要)
+│   ├── archive-session.py       # 导出对话到 markdown
+│   ├── extract-skill.py         # LLM 把一段对话提炼成 SKILL.md
+│   └── update-user-profile.py   # LLM 增量维护 user-profile.md
+├── cron/crontab.example         # 每日自动跑上面这些
+└── data/                        # 索引 / 画像 / 归档 (gitignored)
 ```
 
-## 快速开始
+## 安装
 
 ```bash
-# 1. 建索引 (扫一遍 ~/.cc-connect/sessions/)
-python3 scripts/index-sessions.py
+# 1. 把 repo clone 到 Claude skills 目录
+git clone git@github.com:junyuan-fang/Claude_skills.git ~/.claude/skills
 
-# 2. 检索: 找上周关于 "weixin" 的对话
-python3 scripts/query-history.py weixin
-
-# 3. 从某条 session 提炼 skill
-python3 scripts/extract-skill.py <session_id>
-
-# 4. 更新用户画像
-python3 scripts/update-user-profile.py
-
-# 5. 把上面的任务设成 cron, 让它每天自动跑
-crontab -e          # 复制 cron/crontab.example 内容粘进去
+# 2. (可选) 启用自动归档 / 提炼 / 画像
+crontab -e   # 粘贴 _tools/cron/crontab.example 内容
 ```
 
-## 在微信 / Claude 里直接用
+## 在 cc-connect / 微信里使用
 
-下面的 slash command 已经在 `~/.claude/commands/` 注册 (由 install.sh 完成):
+下列 slash command 已注册到 `~/.claude/commands/`:
 
 | 命令 | 作用 |
 |---|---|
 | `/recall <kw>` | 历史会话全文检索 |
-| `/skills` | 列出本地技能 |
-| `/profile` | 查看 / 更新用户画像 |
-| `/skill-extract` | 把当前对话提炼成新技能 |
-
-## 与 cc-connect 的关系
-
-- cc-connect 本身不变 (没改其 Go 源码)
-- 这套工具读 `~/.cc-connect/sessions/*.json` (cc-connect 写出的会话历史)
-- 写到独立 SQLite + 独立 skill 文件,跟 cc-connect 互不干扰
-- Claude Code 通过命令行调用这些脚本,微信里发 `/recall xxx` 等同于 Claude 跑对应脚本
+| `/recall <kw> --summary` | 检索 + LLM 摘要 |
+| `/skill-extract` | 提炼今天对话的可复用技能 |
+| `/skills-list` | 列出本地已积累的 skill |
+| `/profile` | 查看当前用户画像 |
+| `/profile update` | 用近 7 天对话刷新画像 |
 
 ## 依赖
 
-- Python 3.10+ (sqlite3 with FTS5,几乎都有)
+- Python 3.10+ (stdlib `sqlite3` with FTS5)
 - `claude` CLI (Claude Code) — 用于 LLM 调用,不需要单独 API key
-- 无其他 pip 依赖
+
+## 灵感来源
+
+补足 cc-connect (Claude × IM 桥接) 相对 Hermes Agent 的几个能力缺失:
+**FTS 长期记忆 / 自我演化技能 / 用户画像维护**。
+详见 work_dir 里的 `cc-connect-vs-hermes.md`。
+
+## 同步技能更新
+
+```bash
+cd ~/.claude/skills
+git add . && git commit -m "Update skills" && git push
+```

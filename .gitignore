@@ -1,9 +1,9 @@
 # Local index / cache / backups
-data/sessions.db
-data/sessions.db-*
-data/archive/
-data/cron.log
-data/user-profile.md.bak
+_tools/data/sessions.db
+_tools/data/sessions.db-*
+_tools/data/archive/
+_tools/data/cron.log
+_tools/data/user-profile.md.bak
 
 # Python
 __pycache__/
