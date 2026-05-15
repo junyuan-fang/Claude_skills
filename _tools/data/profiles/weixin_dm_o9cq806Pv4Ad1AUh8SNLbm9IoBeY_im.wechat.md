@@ -5,6 +5,7 @@
 - 喜欢结构化、分小节的中文回答,信息密度高
 - 希望回复末尾附带"响应时间 X 秒"标注
 - 关注信息来源,期望摘要附带原文链接
+- 行业新闻偏好按"大会/融资/量产/政策/研究观点"多维度切分
 
 ## 技术栈与角色
 - 关注具身智能/机器人行业动态,可能为投资、研究或产业从业者
@@ -21,7 +22,7 @@
 
 ## 已知事实
 - 系统用户名为 xinmiao,Linux 环境
-- cc-connect 安装路径:/home/a/miniforge3/lib/node_modules/cc-connect/bin/cc-connect
+- cc-connect 安装路径:/home/a/miniforge3/lib/node_modules/cc-connect/bin/cc-connect(属主 xinmiao,通过 npm 全局安装在 miniforge3 Node modules 下)
 - 邮箱 fangjunyuan1@gmail.com
 - 记忆目录:/home/xinmiao/.claude/projects/-home-xinmiao-code-claude-bot/memory/
 
@@ -29,3 +30,4 @@
 - 回复需在末尾追加"响应时间 X 秒",依赖 UserPromptSubmit hook 注入起始时间戳
 - 涉及跨目录访问时需先说明权限模式与系统文件权限限制
 - settings/hook 变更后可能需提示用户通过 `/hooks` 菜单刷新 watcher
+- 新装 hook 的当轮无时间戳可读,需提前告知从下一条起生效

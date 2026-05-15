@@ -7,6 +7,7 @@
 - 喜欢先看一个小样例（如发 logo 验证）再决定是否推广到定时任务
 - 偏好统一的目录归集管理（cc-connect 产物集中放 `~/code/claude_bot/`）
 - 希望第三方 skill 真文件落到自己的私人 repo，上游 repo 通过软链同步，方便提交
+- 遇到棘手问题倾向于让助手"多次尝试、做对照实验"，自己挑选最佳方案
 
 ## 技术栈与角色
 - 关注 AI 基础设施与具身智能行业动态，非纯开发者视角
@@ -17,17 +18,20 @@
 
 ## 近期项目
 - 通过 cc-connect 在微信端与 Claude 对话，工作目录 `/home/xinmiao/code/claude_bot`
-- 已配置每日 8:00 NVIDIA 新闻图文推送（当前任务 ID `e2f2c8de`，已挂 cc-send-safe wrapper）
+- 每日 8:00 NVIDIA 新闻图文推送，当前 cron ID `a285150d`（v2 防节流策略：先文字后单图，图片失败不重试）
+- 归档目录 `~/code/claude_bot/news_archive/`，存放每日新闻完整版 markdown
 - 关注每日具身智能行业新闻（融资、量产、政策、产业园动态）
 - 集成 huangkiki/dailypaper-skills：真文件在 `~/code/Claude_skills/`，上游 repo 留在 `~/code/claude_bot/dailypaper-skills/` 反向软链供 git pull
 - 关注方向包含 World Action Model (WAM)、Physical AI、VLA 等
+- 持续探索微信图片接口节流规律，做频率 vs 日累计的对照实验
 
 ## 沟通习惯
-- 用中文交流，语气随意，偶有错别字（如 deam0 = demo、健 = 建、dialypaper = dailypaper）
+- 用中文交流，语气随意，偶有错别字或被掐断的半句话（如 deam0 = demo、健 = 建、dialypaper = dailypaper）
 - 习惯追问实现原理，对底层机制感兴趣
 - 一次只问一个点，多轮递进
 - 会先小步验证（如先发个 icon 试水）再扩展功能
 - 目录/架构调整会反复纠正直到符合心智模型，需要先听清意图再动手
+- 消息可能被截断，遇到不完整提问时应列出最可能的几个意图请其确认
 
 ## 已知事实
 - 关注领域：具身智能、人形机器人、NVIDIA、AI 算力与模型发布、World Action Model、Physical AI
@@ -35,16 +39,19 @@
 - 系统用户 xinmiao，cc-connect 装在 `/home/a/miniforge3/lib/node_modules/cc-connect/`
 - cc-connect daemon 任务存储在 `~/.cc-connect/crons/jobs.json`，日志在 `~/.cc-connect/logs/cc-connect.log`
 - 私人 skills repo：`~/code/Claude_skills/`（远端 junyuan-fang/Claude_skills），通过 `~/.claude/skills` 软链生效
-- Zotero 数据在 `~/Zotero/`，Obsidian vault 在 `~/ObsidianVault/`，Obsidian AppImage 在 `~/Applications/`
+- Zotero 数据在 `~/Zotero/`（含 storage 子目录），Obsidian vault 在 `~/ObsidianVault/`，Obsidian AppImage 在 `~/Applications/Obsidian-1.12.7.AppImage`
 - conda 环境 `dailypaper`（Python 3.10）已建好，用于跑 dailypaper-skills 流水线
 - 微信图片发送 wrapper `cc-send-safe` 部署在 `~/code/claude_bot/bin/`，通过 `/home/a/.local/bin/` 软链入 PATH
 
 ## 注意事项
 - 微信推送默认带配图，图片源失败时可降级为纯文本
 - 微信图片接口出现 ret=-2 时为服务端节流，需走 cc-send-safe（压图+退避），严重时只能等数小时或扫码重置 token
+- 长文 cron（>1500 字符 / 多 chunk）易被微信判垃圾整条丢弃，必须走 wrapper 直发并控制字符数
+- cron 任务中**不要同时发图+长文**，推荐两阶段：先文字 → 间隔 30s → 单张小图（<80KB），图片失败立刻放弃
 - 定时任务由 cc-connect daemon 调度，非系统 crontab，依赖 daemon 常驻进程存活
 - hook 注入时间戳用于计算响应时间，settings 变更后可能需 `/hooks` 菜单重载
 - 更新偏好后需同步刷新已有定时任务的 prompt（如把"配图"要求注入到 cron 任务里）
 - cc-connect 触发的 Claude 产物默认归到 `~/code/claude_bot/`，但 `~/ObsidianVault`、`~/Zotero`、`~/.cc-connect` 等固定位置除外
 - 集成第三方 skill 仓库时：真文件落 `~/code/Claude_skills/`，上游 repo 内 `skills/*` 反向软链回来，便于 git pull 同步
 - 涉及目录结构/归属调整前先确认用户意图，避免反复返工
+- 一次性 cron（如补发任务）跑完需用后台监听器自动删除，避免明年同日重复触发
