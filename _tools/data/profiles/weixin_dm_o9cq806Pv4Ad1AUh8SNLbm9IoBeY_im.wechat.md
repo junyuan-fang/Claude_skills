@@ -25,9 +25,11 @@
 - cc-connect 安装路径:/home/a/miniforge3/lib/node_modules/cc-connect/bin/cc-connect(属主 xinmiao,通过 npm 全局安装在 miniforge3 Node modules 下)
 - 邮箱 fangjunyuan1@gmail.com
 - 记忆目录:/home/xinmiao/.claude/projects/-home-xinmiao-code-claude-bot/memory/
+- 关注的具身智能厂商/事件包括智元 AGIBOT、特斯拉 Optimus、鹿明、Vbot 维他动力、宇树、苏州乐享 Zeroth、深圳具身智能港等
 
 ## 注意事项
 - 回复需在末尾追加"响应时间 X 秒",依赖 UserPromptSubmit hook 注入起始时间戳
 - 涉及跨目录访问时需先说明权限模式与系统文件权限限制
 - settings/hook 变更后可能需提示用户通过 `/hooks` 菜单刷新 watcher
 - 新装 hook 的当轮无时间戳可读,需提前告知从下一条起生效
+- 行业新闻摘要需附上多家来源链接,覆盖中英文媒体(新华、21 经济、PRNewswire、GlobeNewswire 等)

@@ -8,6 +8,7 @@
 - 偏好统一的目录归集管理（cc-connect 产物集中放 `~/code/claude_bot/`）
 - 希望第三方 skill 真文件落到自己的私人 repo，上游 repo 通过软链同步，方便提交
 - 遇到棘手问题倾向于让助手"多次尝试、做对照实验"，自己挑选最佳方案
+- 偏好长期健康的系统化方案而非每次救火式临时修复
 
 ## 技术栈与角色
 - 关注 AI 基础设施与具身智能行业动态，非纯开发者视角
@@ -24,6 +25,7 @@
 - 集成 huangkiki/dailypaper-skills：真文件在 `~/code/Claude_skills/`，上游 repo 留在 `~/code/claude_bot/dailypaper-skills/` 反向软链供 git pull
 - 关注方向包含 World Action Model (WAM)、Physical AI、VLA 等
 - 持续探索微信图片接口节流规律，做频率 vs 日累计的对照实验
+- 正在规划"长期健康四件套"：真实送达校验 wrapper、ret=-2 watchdog 自愈、cron v3 分段短文、归档优先于推送
 
 ## 沟通习惯
 - 用中文交流，语气随意，偶有错别字或被掐断的半句话（如 deam0 = demo、健 = 建、dialypaper = dailypaper）
@@ -32,6 +34,7 @@
 - 会先小步验证（如先发个 icon 试水）再扩展功能
 - 目录/架构调整会反复纠正直到符合心智模型，需要先听清意图再动手
 - 消息可能被截断，遇到不完整提问时应列出最可能的几个意图请其确认
+- 被动等待时会主动追问"进展咋样""怎么样了"，需要中途主动汇报状态
 
 ## 已知事实
 - 关注领域：具身智能、人形机器人、NVIDIA、AI 算力与模型发布、World Action Model、Physical AI
@@ -42,12 +45,16 @@
 - Zotero 数据在 `~/Zotero/`（含 storage 子目录），Obsidian vault 在 `~/ObsidianVault/`，Obsidian AppImage 在 `~/Applications/Obsidian-1.12.7.AppImage`
 - conda 环境 `dailypaper`（Python 3.10）已建好，用于跑 dailypaper-skills 流水线
 - 微信图片发送 wrapper `cc-send-safe` 部署在 `~/code/claude_bot/bin/`，通过 `/home/a/.local/bin/` 软链入 PATH
+- cc-connect send 返回 success 仅代表入队，不等于真实送达；真实状态需读 daemon 日志确认
+- 节流锁定后 daemon 重启可清零反垃圾计数（等同 token reset）
 
 ## 注意事项
 - 微信推送默认带配图，图片源失败时可降级为纯文本
-- 微信图片接口出现 ret=-2 时为服务端节流，需走 cc-send-safe（压图+退避），严重时只能等数小时或扫码重置 token
+- 微信图片接口出现 ret=-2 时为服务端节流，需走 cc-send-safe（压图+退避），严重时只能等数小时或扫码重置 token / 重启 daemon
+- 节流是 chunk 长度敏感的：短消息（~80-400 字）通常仍可过，长消息（>1000 字）会被拒
 - 长文 cron（>1500 字符 / 多 chunk）易被微信判垃圾整条丢弃，必须走 wrapper 直发并控制字符数
 - cron 任务中**不要同时发图+长文**，推荐两阶段：先文字 → 间隔 30s → 单张小图（<80KB），图片失败立刻放弃
+- 同一 turn 内的 cc-connect send 会被队列暂存，turn 结束后才统一推送，不要在 turn 内等图片送达
 - 定时任务由 cc-connect daemon 调度，非系统 crontab，依赖 daemon 常驻进程存活
 - hook 注入时间戳用于计算响应时间，settings 变更后可能需 `/hooks` 菜单重载
 - 更新偏好后需同步刷新已有定时任务的 prompt（如把"配图"要求注入到 cron 任务里）
@@ -55,3 +62,4 @@
 - 集成第三方 skill 仓库时：真文件落 `~/code/Claude_skills/`，上游 repo 内 `skills/*` 反向软链回来，便于 git pull 同步
 - 涉及目录结构/归属调整前先确认用户意图，避免反复返工
 - 一次性 cron（如补发任务）跑完需用后台监听器自动删除，避免明年同日重复触发
+- 归档（news_archive）应作为 source-of-truth 优先写入，推送视为 best-effort
