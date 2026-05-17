@@ -9,6 +9,8 @@
 - 希望第三方 skill 真文件落到自己的私人 repo，上游 repo 通过软链同步，方便提交
 - 遇到棘手问题倾向于让助手"多次尝试、做对照实验"，自己挑选最佳方案
 - 偏好长期健康的系统化方案而非每次救火式临时修复
+- 不喜欢看工具调用/后台任务/中间步骤的状态汇报，多步任务只要末尾一句汇总
+- 推送内容偏好"尽调式深度"：每条要带公司背景、技术细节、具体数字、业内对比，而非堆关键词
 
 ## 技术栈与角色
 - 关注 AI 基础设施与具身智能行业动态，非纯开发者视角
@@ -19,13 +21,13 @@
 
 ## 近期项目
 - 通过 cc-connect 在微信端与 Claude 对话，工作目录 `/home/xinmiao/code/claude_bot`
-- 每日 8:00 NVIDIA 新闻图文推送，当前 cron ID `a285150d`（v2 防节流策略：先文字后单图，图片失败不重试）
-- 归档目录 `~/code/claude_bot/news_archive/`，存放每日新闻完整版 markdown
+- 每日 8:00 NVIDIA 新闻图文推送，当前 cron ID `a285150d`（已升级到 v3.1 静默深度版：头条快报 + 深度展开 + 单图，三段间隔 30s，无收尾状态消息）
+- 归档目录 `~/code/claude_bot/news_archive/`，存放每日新闻完整版 markdown（深度版要求 4 类细节全展开，不限字数）
 - 关注每日具身智能行业新闻（融资、量产、政策、产业园动态）
 - 集成 huangkiki/dailypaper-skills：真文件在 `~/code/Claude_skills/`，上游 repo 留在 `~/code/claude_bot/dailypaper-skills/` 反向软链供 git pull
 - 关注方向包含 World Action Model (WAM)、Physical AI、VLA 等
 - 持续探索微信图片接口节流规律，做频率 vs 日累计的对照实验
-- 正在规划"长期健康四件套"：真实送达校验 wrapper、ret=-2 watchdog 自愈、cron v3 分段短文、归档优先于推送
+- 已开始接触飞书通道（session id 出现 `ou_…` 前缀），可能在评估多通道推送方案
 
 ## 沟通习惯
 - 用中文交流，语气随意，偶有错别字或被掐断的半句话（如 deam0 = demo、健 = 建、dialypaper = dailypaper）
@@ -34,11 +36,12 @@
 - 会先小步验证（如先发个 icon 试水）再扩展功能
 - 目录/架构调整会反复纠正直到符合心智模型，需要先听清意图再动手
 - 消息可能被截断，遇到不完整提问时应列出最可能的几个意图请其确认
-- 被动等待时会主动追问"进展咋样""怎么样了"，需要中途主动汇报状态
+- 被动等待时会主动追问"进展咋样""怎么样了"，需要中途主动汇报状态（但要简洁，别堆中间态）
+- 验证迭代节奏：要求改动后会立刻说"你再跑一次我看看效果"
 
 ## 已知事实
 - 关注领域：具身智能、人形机器人、NVIDIA、AI 算力与模型发布、World Action Model、Physical AI
-- 通过微信会话与助手交互（session 绑定 weixin:dm）
+- 通过微信会话与助手交互（session 绑定 weixin:dm），也开始出现飞书会话（`ou_…`）
 - 系统用户 xinmiao，cc-connect 装在 `/home/a/miniforge3/lib/node_modules/cc-connect/`
 - cc-connect daemon 任务存储在 `~/.cc-connect/crons/jobs.json`，日志在 `~/.cc-connect/logs/cc-connect.log`
 - 私人 skills repo：`~/code/Claude_skills/`（远端 junyuan-fang/Claude_skills），通过 `~/.claude/skills` 软链生效
@@ -46,14 +49,17 @@
 - conda 环境 `dailypaper`（Python 3.10）已建好，用于跑 dailypaper-skills 流水线
 - 微信图片发送 wrapper `cc-send-safe` 部署在 `~/code/claude_bot/bin/`，通过 `/home/a/.local/bin/` 软链入 PATH
 - cc-connect send 返回 success 仅代表入队，不等于真实送达；真实状态需读 daemon 日志确认
-- 节流锁定后 daemon 重启可清零反垃圾计数（等同 token reset）
+- 节流锁定后 daemon 重启可清零反垃圾计数（等同 token reset），但不换 token，下次 cron 跑可能立刻重新被锁
+- 微信通道节流可持续 >24h 不自然恢复，唯一彻底解锁手段是扫码换 token (`cc-connect weixin setup --project claude_bot`)
+- cron v3 触发关键词模式："深度版"，包含 4 类细节扩展规范（背景/技术/数据/对比）
 
 ## 注意事项
 - 微信推送默认带配图，图片源失败时可降级为纯文本
 - 微信图片接口出现 ret=-2 时为服务端节流，需走 cc-send-safe（压图+退避），严重时只能等数小时或扫码重置 token / 重启 daemon
 - 节流是 chunk 长度敏感的：短消息（~80-400 字）通常仍可过，长消息（>1000 字）会被拒
 - 长文 cron（>1500 字符 / 多 chunk）易被微信判垃圾整条丢弃，必须走 wrapper 直发并控制字符数
-- cron 任务中**不要同时发图+长文**，推荐两阶段：先文字 → 间隔 30s → 单张小图（<80KB），图片失败立刻放弃
+- cron 任务中**不要同时发图+长文**，推荐三段式：头条文字 → 30s → 深度文字 → 30s → 单张小图（<80KB），图片失败立刻放弃
+- 多段推送禁止省略 sleep 30，否则触发短窗口节流
 - 同一 turn 内的 cc-connect send 会被队列暂存，turn 结束后才统一推送，不要在 turn 内等图片送达
 - 定时任务由 cc-connect daemon 调度，非系统 crontab，依赖 daemon 常驻进程存活
 - hook 注入时间戳用于计算响应时间，settings 变更后可能需 `/hooks` 菜单重载
@@ -63,3 +69,6 @@
 - 涉及目录结构/归属调整前先确认用户意图，避免反复返工
 - 一次性 cron（如补发任务）跑完需用后台监听器自动删除，避免明年同日重复触发
 - 归档（news_archive）应作为 source-of-truth 优先写入，推送视为 best-effort
+- 多步执行过程中不要每步发状态消息，只在最终发一次汇总（用户明确反感中间态噪音）
+- cron 推送 prompt 中不要加"已推送..."这种收尾 reply，保持静默
+- 用户提到"飞书"时需先确认是否已配适配器（当前 cc-connect 仅微信，飞书需 webhook 或新适配器）
