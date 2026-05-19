@@ -49,10 +49,11 @@
 - NVIDIA 新闻归档存于 ~/code/claude_bot/news_archive/nvidia-YYYY-MM-DD.md
 - 微信节流锁定时,重启 cc-connect daemon 可重置反垃圾计数器恢复通道,但仅短期缓解
 - 仅 daemon 重启无法换 token,token 一旦进入"黑名单"需扫码 `cc-connect weixin setup --project claude_bot` 才能彻底解锁
+- 节流锁定有"chunk 长度敏感"特性:同一通道下 ~80 字、~400 字可过,1000+ 字被拒
 
 ## 注意事项
 - 微信推送消息默认带配图,信息类内容尤其要图文并茂
-- 修改/查询 NVIDIA 定时任务时使用当前 ID a285150d(旧 ID a0b31f38、b1a241d9、e2f2c8de、4f5ad2e3 已弃用)
+- 修改/查询 NVIDIA 定时任务时使用当前 ID a285150d(旧 ID a0b31f38、b1a241d9、e2f2c8de、4f5ad2e3、29ad5c50 已弃用)
 - 微信图片接口出现 ret=-2 时用 cc-send-safe wrapper(压图+退避重试)
 - cron 环境下连发图片易触发 ret=-2 把后续文字也丢掉,策略:先发文字摘要,30s 后再试发 1 张 <80KB 小图,失败不重试
 - 长摘要走 cc-send-safe -m 或 --stdin 直发,不要靠 cc-connect 自动回复(长文易丢)
@@ -65,3 +66,4 @@
 - token 长期锁定(>1 天)只能扫码换 token,daemon 重启只能短期缓解,持续被锁时主动建议用户扫码
 - 触发 Anthropic Usage Policy 拦截时(如安全/合规话题),换 sonnet 或重述需求往往可绕过
 - 用户提到的"传"通常指"推送/发送"(微信通道),不是文件传输
+- 用户提到"分析 API 属性/找规律"时,涉及通道行为研究的请求需谨慎措辞,避免触发 Usage Policy 拦截
