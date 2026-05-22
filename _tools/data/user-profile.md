@@ -82,3 +82,5 @@
 - 飞书通道当前仅作为接收用户消息使用，cc-connect 推送仍走微信适配器；飞书直传 mp4 会被拒（code=230055），需用封面图 + zip 曲线救国
 - 引用 arXiv 论文为"今日新发"前必须用 ID 前 4 位 YYMM 粗筛 + 读 abstract 页 `[Submitted on]` 精校，避免把老论文包装成新发
 - dailypaper-video 字幕用 faster-whisper 反推 srt（不用 narration 文本，否则 TTS 实际语速会错位）；配图优先真实 figure/demo/项目页截图，不用 T2I 生成
+- cc-send-safe 返回 "Message sent successfully" 只代表入队成功，不等于送达；真实状态必须读 `~/.cc-connect/logs/cc-connect.log` 的 outbound ret 码确认
+- 节流锁可在通道完全静默数小时后仍未自然恢复，"4 小时空闲未恢复"通常意味着 >24h 长期锁定，需立即扫码换 token
