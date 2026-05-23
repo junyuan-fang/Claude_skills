@@ -44,6 +44,7 @@
 - 被动等待时会主动追问"进展咋样""怎么样了"，需要中途主动汇报状态（但要简洁，别堆中间态）
 - 验证迭代节奏：要求改动后会立刻说"你再跑一次我看看效果"
 - 会基于自身领域知识抓助手的事实错误（如指出 LeVERB 是 2025 年旧作），期待立即修正 + 加入校验规则避免复发
+- 改需求多以一句话短指令下达（如"改一下，今日论文必须两个礼拜内的"），期待助手立即落到 cron prompt 并同步 memory
 
 ## 已知事实
 - 关注领域：具身智能、人形机器人、NVIDIA、AI 算力与模型发布、World Action Model、Physical AI
@@ -59,6 +60,7 @@
 - 微信通道节流可持续 >24h 不自然恢复，唯一彻底解锁手段是扫码换 token (`cc-connect weixin setup --project claude_bot`)
 - cron 触发关键词模式："深度版"（v3.1 NVIDIA / v1.3 embodied），均含静默无中间态 + 已熟概念不解释 + 论文 14 天内
 - 单卡 24GB 资源（用于 dailypaper-video 模型串行调度）
+- daily-papers 流水线分三步：fetch（纯 Python 零 token，HF + arXiv API 打分去重富化）→ review（Claude 锐评分🔥/👀/💤）→ notes（Claude 编排 paper-reader，质量阈值≥120 行/2 公式/1 图）
 
 ## 注意事项
 - 微信推送默认带配图，图片源失败时可降级为纯文本
@@ -84,3 +86,4 @@
 - dailypaper-video 字幕用 faster-whisper 反推 srt（不用 narration 文本，否则 TTS 实际语速会错位）；配图优先真实 figure/demo/项目页截图，不用 T2I 生成
 - cc-send-safe 返回 "Message sent successfully" 只代表入队成功，不等于送达；真实状态必须读 `~/.cc-connect/logs/cc-connect.log` 的 outbound ret 码确认
 - 节流锁可在通道完全静默数小时后仍未自然恢复，"4 小时空闲未恢复"通常意味着 >24h 长期锁定，需立即扫码换 token
+- 用户偶尔会问"还工作吗 / 你好"做存活探活，需快速短回并主动汇报已有 cron 跑过状态
