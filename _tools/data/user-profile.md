@@ -13,6 +13,8 @@
 - 推送内容偏好"尽调式深度"：每条要带公司背景、技术细节、具体数字、业内对比，而非堆关键词
 - 已熟领域术语（VLA/WAM/Sim2Real/Teleoperation/Diffusion Policy/VLM/RL/IL/MPC/ZMP/locomotion/dexterous manipulation 等）无需解释，只解释真正新生/小众术语和公司业务背景
 - 论文引用必须做日期硬校验，"今日论文"要求 14 天内（5/20 后口径），HuggingFace daily 优先，搜不到就宁可不放也不包装老论文
+- 展示自己造的工具/产物时喜欢看"实物 + 实现方式"两件套（如要 mp4 同时要架构说明），实现说明偏好分模块+阶段化分解
+- 偶尔通过简短问候（"你好""还工作吗"）做存活探活，期待秒回 + 顺带汇报已有 cron 状态
 
 ## 技术栈与角色
 - 关注 AI 基础设施与具身智能行业动态，非纯开发者视角
@@ -30,12 +32,13 @@
 - 归档目录 `~/code/claude_bot/news_archive/`（NVIDIA + embodied 两套完整版 markdown）
 - 集成 huangkiki/dailypaper-skills：真文件在 `~/code/Claude_skills/`，上游 repo 留在 `~/code/claude_bot/dailypaper-skills/` 反向软链供 git pull
 - dailypaper-video 流水线 `~/code/claude_bot/dailypaper-video/`：7 阶段把日推荐 md 转 1080p 竖屏 mp4，串行调度 F5-TTS → faster-whisper → SDXL Lightning → ffmpeg NVENC，准备投 YouTube Shorts（手动审核，v1 不自动上传）
+- 已产出首版样片 `2026-05-20-papers.mp4`（1080p / 60-90s / 3.89 MB / 8 篇 2605.xxxxx 论文，全部 14 天内）
 - 关注方向包含 World Action Model (WAM)、Physical AI、VLA、Diffusion Policy、Sim2Real 等
 - 持续探索微信图片接口节流规律，做频率 vs 日累计的对照实验
 - 已开始使用飞书通道（session id `ou_…` 前缀），可在飞书端触发任务；飞书直传 mp4 会报 `code=230055`，需走封面图 + zip 打包
 
 ## 沟通习惯
-- 用中文交流，语气随意，偶有错别字或被掐断的半句话（如 deam0 = demo、健 = 建、dialypaper = dailypaper、leverb = LeVERB）
+- 用中文交流，语气随意，偶有错别字或被掐断的半句话（如 deam0 = demo、健 = 建、dialypaper = dailypaper、leverb = LeVERB、洗 = 稍）
 - 习惯追问实现原理，对底层机制感兴趣
 - 一次只问一个点，多轮递进
 - 会先小步验证（如先发个 icon 试水）再扩展功能
@@ -45,6 +48,7 @@
 - 验证迭代节奏：要求改动后会立刻说"你再跑一次我看看效果"
 - 会基于自身领域知识抓助手的事实错误（如指出 LeVERB 是 2025 年旧作），期待立即修正 + 加入校验规则避免复发
 - 改需求多以一句话短指令下达（如"改一下，今日论文必须两个礼拜内的"），期待助手立即落到 cron prompt 并同步 memory
+- 一次请求里常并列多个产物（如"实现方式发我 + 做的 mp4 也发过来"），期待一次性都给齐
 
 ## 已知事实
 - 关注领域：具身智能、人形机器人、NVIDIA、AI 算力与模型发布、World Action Model、Physical AI
@@ -61,6 +65,11 @@
 - cron 触发关键词模式："深度版"（v3.1 NVIDIA / v1.3 embodied），均含静默无中间态 + 已熟概念不解释 + 论文 14 天内
 - 单卡 24GB 资源（用于 dailypaper-video 模型串行调度）
 - daily-papers 流水线分三步：fetch（纯 Python 零 token，HF + arXiv API 打分去重富化）→ review（Claude 锐评分🔥/👀/💤）→ notes（Claude 编排 paper-reader，质量阈值≥120 行/2 公式/1 图）
+- daily-papers 配置在 `_shared/user-config.json`（路径、关键词、打分规则、自动化开关）
+- daily-papers review 阶段硬约束：不能凭空说"只有仿真"，必须查 `has_real_world` 字段
+- daily-papers notes 阶段会扫所有 `[[概念]]` 链接 + `method_names` 自动归类到 16 个概念子目录，并自动刷新 MOC，git 自动化可选
+- 飞书短问候 / Cyber Policy 拒答事件：cc-connect 飞书入口可能命中 Anthropic Usage Policy 触发自动拒答，需引导切模型或换适配器
+- 用户 Cyber 限流时被建议切 `claude-sonnet-4-20250514`
 
 ## 注意事项
 - 微信推送默认带配图，图片源失败时可降级为纯文本
@@ -87,3 +96,5 @@
 - cc-send-safe 返回 "Message sent successfully" 只代表入队成功，不等于送达；真实状态必须读 `~/.cc-connect/logs/cc-connect.log` 的 outbound ret 码确认
 - 节流锁可在通道完全静默数小时后仍未自然恢复，"4 小时空闲未恢复"通常意味着 >24h 长期锁定，需立即扫码换 token
 - 用户偶尔会问"还工作吗 / 你好"做存活探活，需快速短回并主动汇报已有 cron 跑过状态
+- 飞书入口的探活短问候可能触发 Anthropic Cyber Usage Policy 自动拒答，必要时引导用户切 `claude-sonnet-4-20250514` 或换通道
+- 解释 dailypaper / 流水线类项目时优先给"模块 → 阶段 → 关键技术决策"的结构化分解，附产物路径与文件名
