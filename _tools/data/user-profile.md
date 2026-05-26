@@ -28,7 +28,7 @@
 ## 近期项目
 - 通过 cc-connect 在微信/飞书端与 Claude 对话，工作目录 `/home/xinmiao/code/claude_bot`
 - 每日 8:00 NVIDIA 新闻图文推送，cron ID `a285150d`（v3.1 静默深度版：头条 + 深度 + 单图，三段间隔 30s）
-- 每日 12:00 具身智能新闻图文推送，cron ID `d667c0db`（已升级到 v1.3：行业 + 论文混编，论文必须 14 天内，HF daily 优先，arXiv ID YYMM 粗筛 + abstract 精校）
+- 每日 12:00 具身智能新闻图文推送，cron ID `d667c0db`（v1.3：行业 + 论文混编，论文必须 14 天内，HF daily 优先，arXiv ID YYMM 粗筛 + abstract 精校）
 - 归档目录 `~/code/claude_bot/news_archive/`（NVIDIA + embodied 两套完整版 markdown）
 - 集成 huangkiki/dailypaper-skills：真文件在 `~/code/Claude_skills/`，上游 repo 留在 `~/code/claude_bot/dailypaper-skills/` 反向软链供 git pull
 - dailypaper-video 流水线 `~/code/claude_bot/dailypaper-video/`：7 阶段把日推荐 md 转 1080p 竖屏 mp4，串行调度 F5-TTS → faster-whisper → SDXL Lightning → ffmpeg NVENC，准备投 YouTube Shorts（手动审核，v1 不自动上传）

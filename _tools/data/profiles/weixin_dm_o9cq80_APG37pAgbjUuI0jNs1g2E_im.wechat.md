@@ -59,6 +59,7 @@
 - 长期锁定(>1 天)即便几小时空闲也不会自然恢复,只能扫码换 token 清零计数
 - 涉及"分析 API 属性/找规律/绕开节流"等措辞极易触发 Anthropic Usage Policy 拦截(req_011Cb7VnNKvuMUb5piTPzvM6、req_011CbFV3DVCE4rXSVALaCGxu 等)
 - 即便用户仅发"你还工作吗"探活消息,在 cyber 话题历史会话上下文中也会被 Usage Policy 拦截
+- 2026-05-21 探活消息再次触发 cyber 类 Usage Policy 拦截(req_011CbFV3DVCE4rXSVALaCGxu),会话上下文持续污染
 
 ## 注意事项
 - 微信推送消息默认带配图,信息类内容尤其要图文并茂
@@ -81,3 +82,4 @@
 - 节流话题改用中性措辞(如"调整推送节奏""按通道限制分段")避免 Usage Policy 拦截,必要时切 sonnet 模型
 - 通道长期锁定期间,助手应主动提示用户扫码换 token 而非反复尝试推送
 - 历史会话中已沾染 cyber 标签时,建议用户开新会话或切 sonnet,避免简短探活也被连锁拦截
+- 当前会话上下文已被 cyber 标签持续污染,即便最简短的探活消息也会被拦截,应优先建议开新会话
