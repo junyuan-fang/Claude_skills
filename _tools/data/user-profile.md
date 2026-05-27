@@ -15,6 +15,7 @@
 - 论文引用必须做日期硬校验，"今日论文"要求 14 天内（5/20 后口径），HuggingFace daily 优先，搜不到就宁可不放也不包装老论文
 - 展示自己造的工具/产物时喜欢看"实物 + 实现方式"两件套（如要 mp4 同时要架构说明），实现说明偏好分模块+阶段化分解
 - 偶尔通过简短问候（"你好""还工作吗"）做存活探活，期待秒回 + 顺带汇报已有 cron 状态
+- 询问技术名词时常带笔误/截断（如"nvidiafffinc""nv diff"），期待助手猜出最可能候选并用表格列出对比，必要时追问澄清
 
 ## 技术栈与角色
 - 关注 AI 基础设施与具身智能行业动态，非纯开发者视角
@@ -24,6 +25,7 @@
 - 已使用 Zotero（含 Better BibTeX）+ Obsidian 的论文/笔记工作流
 - 具身智能领域有较深背景，掌握常见 ML/机器人学术语，无需基础概念扫盲
 - 关注短视频内容生产（YouTube Shorts 1080×1920 竖屏 9:16），了解 TTS/ASR/SDXL/NVENC 等多模态视频流水线
+- 关注可微渲染 / 3D 重建 / 神经渲染方向（nvdiffrast 系列、PyTorch3D、Mitsuba 3、Dr.Jit），与具身智能合成数据 pipeline 相关
 
 ## 近期项目
 - 通过 cc-connect 在微信/飞书端与 Claude 对话，工作目录 `/home/xinmiao/code/claude_bot`
@@ -36,9 +38,10 @@
 - 关注方向包含 World Action Model (WAM)、Physical AI、VLA、Diffusion Policy、Sim2Real 等
 - 持续探索微信图片接口节流规律，做频率 vs 日累计的对照实验
 - 已开始使用飞书通道（session id `ou_…` 前缀），可在飞书端触发任务；飞书直传 mp4 会报 `code=230055`，需走封面图 + zip 打包
+- 两个日推 cron 在 5/21–5/27 期间稳定运行，每日 1–2 分钟内完成推送，无中间态噪音
 
 ## 沟通习惯
-- 用中文交流，语气随意，偶有错别字或被掐断的半句话（如 deam0 = demo、健 = 建、dialypaper = dailypaper、leverb = LeVERB、洗 = 稍）
+- 用中文交流，语气随意，偶有错别字或被掐断的半句话（如 deam0 = demo、健 = 建、dialypaper = dailypaper、leverb = LeVERB、洗 = 稍、nvidiafffinc / nv diff = nvdiffrast）
 - 习惯追问实现原理，对底层机制感兴趣
 - 一次只问一个点，多轮递进
 - 会先小步验证（如先发个 icon 试水）再扩展功能
@@ -49,9 +52,10 @@
 - 会基于自身领域知识抓助手的事实错误（如指出 LeVERB 是 2025 年旧作），期待立即修正 + 加入校验规则避免复发
 - 改需求多以一句话短指令下达（如"改一下，今日论文必须两个礼拜内的"），期待助手立即落到 cron prompt 并同步 memory
 - 一次请求里常并列多个产物（如"实现方式发我 + 做的 mp4 也发过来"），期待一次性都给齐
+- 名词追问常用极短回复修正（如先问错拼，下一条只补"nv diff 的"），期待助手快速重新对齐
 
 ## 已知事实
-- 关注领域：具身智能、人形机器人、NVIDIA、AI 算力与模型发布、World Action Model、Physical AI
+- 关注领域：具身智能、人形机器人、NVIDIA、AI 算力与模型发布、World Action Model、Physical AI、可微渲染/3D 重建
 - 通过微信会话与助手交互（session 绑定 weixin:dm），也使用飞书会话（`ou_…`）
 - 系统用户 xinmiao，cc-connect 装在 `/home/a/miniforge3/lib/node_modules/cc-connect/`
 - cc-connect daemon 任务存储在 `~/.cc-connect/crons/jobs.json`，日志在 `~/.cc-connect/logs/cc-connect.log`
@@ -70,6 +74,7 @@
 - daily-papers notes 阶段会扫所有 `[[概念]]` 链接 + `method_names` 自动归类到 16 个概念子目录，并自动刷新 MOC，git 自动化可选
 - 飞书短问候 / Cyber Policy 拒答事件：cc-connect 飞书入口可能命中 Anthropic Usage Policy 触发自动拒答，需引导切模型或换适配器
 - 用户 Cyber 限流时被建议切 `claude-sonnet-4-20250514`
+- nvdiffrast / nvdiffrec / nvdiffmodeling 是 NVIDIA Research 可微渲染三件套（NVlabs 出品，Samuli Laine 等作者），与 PyTorch3D / Mitsuba 3 / Dr.Jit 并列可微渲染主流栈
 
 ## 注意事项
 - 微信推送默认带配图，图片源失败时可降级为纯文本
@@ -98,3 +103,4 @@
 - 用户偶尔会问"还工作吗 / 你好"做存活探活，需快速短回并主动汇报已有 cron 跑过状态
 - 飞书入口的探活短问候可能触发 Anthropic Cyber Usage Policy 自动拒答，必要时引导用户切 `claude-sonnet-4-20250514` 或换通道
 - 解释 dailypaper / 流水线类项目时优先给"模块 → 阶段 → 关键技术决策"的结构化分解，附产物路径与文件名
+- 用户输入英文技术名词常带笔误或被截断，先按发音/拼写最近邻列候选表格，再请其用一两字补齐（如"nv diff"→nvdiffrast）
