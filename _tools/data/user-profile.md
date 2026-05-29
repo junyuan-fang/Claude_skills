@@ -39,7 +39,7 @@
 - 关注方向包含 World Action Model (WAM)、Physical AI、VLA、Diffusion Policy、Sim2Real 等
 - 持续探索微信图片接口节流规律，做频率 vs 日累计的对照实验
 - 已开始使用飞书通道（session id `ou_…` 前缀），可在飞书端触发任务；飞书直传 mp4 会报 `code=230055`，需走封面图 + zip 打包
-- 两个日推 cron 在 5/21–5/28 期间稳定运行，每日 1–2 分钟内完成推送，无中间态噪音
+- 两个日推 cron 在 5/21–5/29 期间稳定运行，每日 1–2 分钟内完成推送，无中间态噪音
 
 ## 沟通习惯
 - 用中文交流，语气随意，偶有错别字或被掐断的半句话（如 deam0 = demo、健 = 建、dialypaper = dailypaper、leverb = LeVERB、洗 = 稍、nvidiafffinc / nv diff = nvdiffrast）
