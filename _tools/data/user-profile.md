@@ -19,6 +19,7 @@
 - 名词追问回复偏好"是什么 + 三件套/系列对比表 + 为什么重要 + 作者/出处"四件套结构
 - 对错拼名词的反馈极简（下一条只补两字"nv diff 的"），期待助手立即把第一轮的候选表替换成正确栈再展开
 - 看长文公众号/论文解读时，期待助手提炼"主线判断 + 技术三件套表格 + 实验数字 + 作者金句"，并对核心概念加单独词条解释
+- 针对长文中的核心术语（如"critic"）追问独立词条，期待"朴素定义 + Actor/Critic 类比表 + 为什么需要 + 文中各种变体清单 + 团队独特点"五段式
 
 ## 技术栈与角色
 - 关注 AI 基础设施与具身智能行业动态，非纯开发者视角
@@ -42,7 +43,7 @@
 - 关注方向包含 World Action Model (WAM)、Physical AI、VLA、Diffusion Policy、Sim2Real、τ0-WM 世界模型、Critic 驱动 RL 后训练
 - 持续探索微信图片接口节流规律，做频率 vs 日累计的对照实验
 - 已开始使用飞书通道（session id `ou_…` 前缀），可在飞书端触发任务；飞书直传 mp4 会报 `code=230055`，需走封面图 + zip 打包
-- 两个日推 cron 在 5/24–5/31 期间稳定运行，响应时间 75–119 秒区间，无中间态噪音
+- 两个日推 cron 在 5/24–6/01 期间稳定运行，响应时间 75–138 秒区间，无中间态噪音
 
 ## 沟通习惯
 - 用中文交流，语气随意，偶有错别字或被掐断的半句话（如 deam0 = demo、健 = 建、dialypaper = dailypaper、leverb = LeVERB、洗 = 稍、nvidiafffinc / nv diff = nvdiffrast）
@@ -59,6 +60,7 @@
 - 名词追问常用极短回复修正（如先问错拼，下一条只补"nv diff 的"），期待助手快速重新对齐
 - 飞书 reply chain 回复时，新内容常附在引用块尾部一行（如末尾单独一句"nv diff 的"），需要扫到引用结尾才能拿到真正问题
 - 阅读长文后会就文中术语（如"critic"）追问独立词条，期待助手不重复全文背景、直接给定义+变体表+在该语境的特殊点
+- 公众号链接发到飞书可能触发 Cyber Policy 拒答（同一 URL 改在飞书会话里追问"这篇主要讲了什么"可正常处理）
 
 ## 已知事实
 - 关注领域：具身智能、人形机器人、NVIDIA、AI 算力与模型发布、World Action Model、Physical AI、可微渲染/3D 重建、VLA + 世界模型 + Critic 路线
@@ -84,6 +86,8 @@
 - NVIDIA 商用渲染器栈：Iray（离线 PBR）/ OptiX（RTX SDK 底层）/ Omniverse RTX Renderer（实时光追，Isaac Sim 用）/ Falcor（开源研究框架）/ NeuralVDB+vMaterials（体积材质）
 - 罗剑岚团队技术线：SERL → HIL-SERL → LWD（2026-05 初）→ τ0-WM（2026-05-31 开源），主线是"评价（critic）驱动真机 RL"
 - τ0-WM 关键事实：Wan2.2 视频主干 + 并联 Action DiT + Simulator 打分头；17800h 真机遥操 + 6500h UMI + 3000h ego video ≈ 3 万小时；43% → 60%（+RCS+LAR），vs ACG baseline 22 个点提升；repo `sii-research/tau-0-wm`
+- LWD 的 DIVL 模块特点：critic 不输出标量，输出分布，把握小时自动保守
+- Critic 在罗团队范式中的独特做法：把失败数据显式喂给 critic（模仿学习扔掉的数据 critic 吃得最香，教会模型"这条路走不通"）
 - "天南具身公园"是关注的具身算法行业评论公众号（作者天南）
 
 ## 注意事项
@@ -118,3 +122,4 @@
 - 解释 NVIDIA 系名字时要先分清"商用渲染器栈（Iray/OptiX/Omniverse/Falcor）"vs"研究用可微渲染栈（nvdiffrast 三件套）"两条线，避免把 AI 研究库当成电影渲染器讲
 - 解读公众号长文要点结构：主线判断 → 技术三件套表格 → 实验数字 → 作者金句 → 一句话概括，附作者/公众号名
 - 改 cron 触发时间（如改成工作日）后只回一句确认表 + 不解释 cron 语法（用户已熟），表里列 cron ID + 表达式 + 含义即可
+- 用户对长文中术语追问独立词条时（如 critic），不要复述全文背景，直接给"朴素定义+Actor/Critic 对照表+为什么需要+文中各种变体清单（AlphaGo value net / RLHF reward model / o1 PRM / τ0-WM Simulator / LWD DIVL）+团队独特点"五段式
