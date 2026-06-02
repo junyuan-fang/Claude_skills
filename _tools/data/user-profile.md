@@ -20,6 +20,7 @@
 - 对错拼名词的反馈极简（下一条只补两字"nv diff 的"），期待助手立即把第一轮的候选表替换成正确栈再展开
 - 看长文公众号/论文解读时，期待助手提炼"主线判断 + 技术三件套表格 + 实验数字 + 作者金句"，并对核心概念加单独词条解释
 - 针对长文中的核心术语（如"critic"）追问独立词条，期待"朴素定义 + Actor/Critic 类比表 + 为什么需要 + 文中各种变体清单 + 团队独特点"五段式
+- 改 cron 触发条件后只需一句确认 + 表格列出 cron ID/表达式/含义，不需要解释 cron 语法
 
 ## 技术栈与角色
 - 关注 AI 基础设施与具身智能行业动态，非纯开发者视角
@@ -34,8 +35,8 @@
 
 ## 近期项目
 - 通过 cc-connect 在微信/飞书端与 Claude 对话，工作目录 `/home/xinmiao/code/claude_bot`
-- 每日 NVIDIA 新闻图文推送，cron ID `a285150d`，**5/31 起改为工作日 `0 8 * * 1-5`**（v3.1 静默深度版：头条 + 深度 + 单图，三段间隔 30s）
-- 每日具身智能新闻图文推送，cron ID `d667c0db`，**5/31 起改为工作日 `0 12 * * 1-5`**（v1.3：行业 + 论文混编，论文必须 14 天内，HF daily 优先，arXiv ID YYMM 粗筛 + abstract 精校）
+- 每日 NVIDIA 新闻图文推送，cron ID `a285150d`，**5/31 起工作日 `0 8 * * 1-5`**（v3.1 静默深度版：头条 + 深度 + 单图，三段间隔 30s）
+- 每日具身智能新闻图文推送，cron ID `d667c0db`，**5/31 起工作日 `0 12 * * 1-5`**（v1.3：行业 + 论文混编，论文必须 14 天内，HF daily 优先，arXiv ID YYMM 粗筛 + abstract 精校）
 - 归档目录 `~/code/claude_bot/news_archive/`（NVIDIA + embodied 两套完整版 markdown）
 - 集成 huangkiki/dailypaper-skills：真文件在 `~/code/Claude_skills/`，上游 repo 留在 `~/code/claude_bot/dailypaper-skills/` 反向软链供 git pull
 - dailypaper-video 流水线 `~/code/claude_bot/dailypaper-video/`：7 阶段把日推荐 md 转 1080p 竖屏 mp4，串行调度 F5-TTS → faster-whisper → SDXL Lightning → ffmpeg NVENC，准备投 YouTube Shorts（手动审核，v1 不自动上传）
@@ -43,7 +44,7 @@
 - 关注方向包含 World Action Model (WAM)、Physical AI、VLA、Diffusion Policy、Sim2Real、τ0-WM 世界模型、Critic 驱动 RL 后训练
 - 持续探索微信图片接口节流规律，做频率 vs 日累计的对照实验
 - 已开始使用飞书通道（session id `ou_…` 前缀），可在飞书端触发任务；飞书直传 mp4 会报 `code=230055`，需走封面图 + zip 打包
-- 两个日推 cron 在 5/24–6/01 期间稳定运行，响应时间 75–138 秒区间，无中间态噪音
+- 两个日推 cron 在 5/24–6/02 期间稳定运行，响应时间 75–138 秒区间，无中间态噪音
 
 ## 沟通习惯
 - 用中文交流，语气随意，偶有错别字或被掐断的半句话（如 deam0 = demo、健 = 建、dialypaper = dailypaper、leverb = LeVERB、洗 = 稍、nvidiafffinc / nv diff = nvdiffrast）
