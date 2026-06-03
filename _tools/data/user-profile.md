@@ -44,7 +44,7 @@
 - 关注方向包含 World Action Model (WAM)、Physical AI、VLA、Diffusion Policy、Sim2Real、τ0-WM 世界模型、Critic 驱动 RL 后训练
 - 持续探索微信图片接口节流规律，做频率 vs 日累计的对照实验
 - 已开始使用飞书通道（session id `ou_…` 前缀），可在飞书端触发任务；飞书直传 mp4 会报 `code=230055`，需走封面图 + zip 打包
-- 两个日推 cron 在 5/24–6/02 期间稳定运行，响应时间 75–138 秒区间，无中间态噪音
+- 两个日推 cron 在 5/24–6/03 期间稳定运行，响应时间 75–138 秒区间，无中间态噪音
 
 ## 沟通习惯
 - 用中文交流，语气随意，偶有错别字或被掐断的半句话（如 deam0 = demo、健 = 建、dialypaper = dailypaper、leverb = LeVERB、洗 = 稍、nvidiafffinc / nv diff = nvdiffrast）
@@ -89,6 +89,7 @@
 - τ0-WM 关键事实：Wan2.2 视频主干 + 并联 Action DiT + Simulator 打分头；17800h 真机遥操 + 6500h UMI + 3000h ego video ≈ 3 万小时；43% → 60%（+RCS+LAR），vs ACG baseline 22 个点提升；repo `sii-research/tau-0-wm`
 - LWD 的 DIVL 模块特点：critic 不输出标量，输出分布，把握小时自动保守
 - Critic 在罗团队范式中的独特做法：把失败数据显式喂给 critic（模仿学习扔掉的数据 critic 吃得最香，教会模型"这条路走不通"）
+- Critic 即 Actor-Critic 强化学习中的价值函数 Q(s,a)/V(s)，把 sparse reward 平摊到每步、降 policy gradient 方差；典型变体：AlphaGo value net / RLHF reward model / o1 PRM / τ0-WM Simulator / LWD DIVL
 - "天南具身公园"是关注的具身算法行业评论公众号（作者天南）
 
 ## 注意事项

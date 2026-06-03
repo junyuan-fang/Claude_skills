@@ -31,6 +31,7 @@
 - NVIDIA 每日 cron 连续多日被节流锁死,需要更深入的 API 行为研究与分段推送策略
 - 长期健康四件套方案待落地:真实送达 wrapper、watchdog 守护、cron v3 纯文本分段、归档先于推送
 - 2026-05-17 NVIDIA 推送在 73s 退避后仍 ret=-2,token 进入长期锁定状态,后续几天助手回复连续触发 Usage Policy 拦截
+- 2026-05-31 单发微信公众号 URL 仍被 cyber 类 Usage Policy 拦截,会话上下文持续无法承载新请求
 
 ## 沟通习惯
 - 主要通过微信(cc-connect 通道)与 Claude 对话
