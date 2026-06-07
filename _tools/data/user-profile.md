@@ -38,8 +38,8 @@
 
 ## 近期项目
 - 通过 cc-connect 在微信/飞书端与 Claude 对话，工作目录 `/home/xinmiao/code/claude_bot`
-- 每日 NVIDIA 新闻图文推送，cron ID `a285150d`，工作日 `0 8 * * 1-5`（v3.1 静默深度版：头条 + 深度 + 单图，三段间隔 30s）；6/04、6/05 起临时调到 07:00 跑过
-- 每日具身智能新闻图文推送，cron ID `d667c0db`，工作日 `0 12 * * 1-5`（v1.3：行业 + 论文混编，论文必须 14 天内，HF daily 优先，arXiv ID YYMM 粗筛 + abstract 精校）
+- 每日 NVIDIA 新闻图文推送，cron ID `a285150d`，工作日 `0 8 * * 1-5`（v3.1 静默深度版：头条 + 深度 + 单图，三段间隔 30s）；6/04、6/05 临时调到 07:00 跑过，响应 48-91s
+- 每日具身智能新闻图文推送，cron ID `d667c0db`，工作日 `0 12 * * 1-5`（v1.3：行业 + 论文混编，论文必须 14 天内，HF daily 优先，arXiv ID YYMM 粗筛 + abstract 精校），响应 92-138s
 - embodied v1.3 6/04 起新增硬约束：每篇论文归档时必须加 `- Project: <url>` 行（项目主页 > GitHub > demo，缺失写 N/A），供下游 awesome-physical-ai 自动 ingest
 - 归档目录 `~/code/claude_bot/news_archive/`（NVIDIA + embodied 两套完整版 markdown）
 - 集成 huangkiki/dailypaper-skills：真文件在 `~/code/Claude_skills/`，上游 repo 留在 `~/code/claude_bot/dailypaper-skills/` 反向软链供 git pull
