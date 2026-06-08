@@ -23,6 +23,7 @@
 - 改 cron 触发条件后只需一句确认 + 表格列出 cron ID/表达式/含义，不需要解释 cron 语法
 - 三步流水线类任务（如 daily-papers fetch→review→notes）跑完只要"产物路径 + 关键数字 + 副作用是否触发"一句话汇总
 - 论文流水线产物汇总要点明"池子大小是否异常"（如 arXiv 429 限流导致只有 8 篇），让用户能识别数据源异常
+- daily-papers 汇总要列必读/值得看/可跳过分桶数（如 "20 篇，必读 3 / 值得看 13 / 可跳过 4"）+ MOC 刷新具体数（如 "concept MOC 152 篇、paper MOC 8 篇"）
 
 ## 技术栈与角色
 - 关注 AI 基础设施与具身智能行业动态，非纯开发者视角
@@ -38,7 +39,7 @@
 
 ## 近期项目
 - 通过 cc-connect 在微信/飞书端与 Claude 对话，工作目录 `/home/xinmiao/code/claude_bot`
-- 每日 NVIDIA 新闻图文推送，cron ID `a285150d`，工作日 `0 8 * * 1-5`（v3.1 静默深度版：头条 + 深度 + 单图，三段间隔 30s）；6/04、6/05 临时调到 07:00 跑过，响应 48-91s
+- 每日 NVIDIA 新闻图文推送，cron ID `a285150d`，工作日 `0 8 * * 1-5`（v3.1 静默深度版：头条 + 深度 + 单图，三段间隔 30s）；6/04、6/05、6/08 临时调到 07:00 跑过，响应 48-91s
 - 每日具身智能新闻图文推送，cron ID `d667c0db`，工作日 `0 12 * * 1-5`（v1.3：行业 + 论文混编，论文必须 14 天内，HF daily 优先，arXiv ID YYMM 粗筛 + abstract 精校），响应 92-138s
 - embodied v1.3 6/04 起新增硬约束：每篇论文归档时必须加 `- Project: <url>` 行（项目主页 > GitHub > demo，缺失写 N/A），供下游 awesome-physical-ai 自动 ingest
 - 归档目录 `~/code/claude_bot/news_archive/`（NVIDIA + embodied 两套完整版 markdown）
@@ -46,7 +47,7 @@
 - dailypaper-video 流水线 `~/code/claude_bot/dailypaper-video/`：7 阶段把日推荐 md 转 1080p 竖屏 mp4，串行调度 F5-TTS → faster-whisper → SDXL Lightning → ffmpeg NVENC，准备投 YouTube Shorts（手动审核，v1 不自动上传）
 - 已产出首版样片 `2026-05-20-papers.mp4`（1080p / 60-90s / 3.89 MB / 8 篇 2605.xxxxx 论文，全部 14 天内）
 - daily-papers 全流水线已多次跑通：推荐文件落 `~/ObsidianVault/DailyPapers/YYYY-MM-DD-论文推荐.md`，重点笔记 ≥120 行/2 公式/1 图过质检，paper-reader Agent 自带 MOC 刷新会顺带刷目录页（即便 config `auto_refresh_indexes=false`）
-- 已跑通日：6/04（21 篇池/3 篇笔记 minWM+OmniDreams+GN0，1392s）、6/05（8 篇池受 arXiv 429 限流影响/2 篇笔记 Cosmos3+GRAIL，1268s）
+- 已跑通日：6/04（21 篇池/3 篇笔记 minWM+OmniDreams+GN0，1392s）、6/05（8 篇池受 arXiv 429 限流/2 篇笔记 Cosmos3+GRAIL，1268s）、6/08（20 篇池/3 篇必读笔记 PiL-World+WLA+DexFuture，1447s）
 - 关注方向包含 World Action Model (WAM)、Physical AI、VLA、Diffusion Policy、Sim2Real、τ0-WM 世界模型、Critic 驱动 RL 后训练
 - 持续探索微信图片接口节流规律，做频率 vs 日累计的对照实验
 - 已开始使用飞书通道（session id `ou_…` 前缀），可在飞书端触发任务；飞书直传 mp4 会报 `code=230055`，需走封面图 + zip 打包
@@ -68,7 +69,7 @@
 - 飞书 reply chain 回复时，新内容常附在引用块尾部一行（如末尾单独一句"nv diff 的"），需要扫到引用结尾才能拿到真正问题
 - 阅读长文后会就文中术语（如"critic"）追问独立词条，期待助手不重复全文背景、直接给定义+变体表+在该语境的特殊点
 - 公众号链接发到飞书可能触发 Cyber Policy 拒答（同一 URL 改在飞书会话里追问"这篇主要讲了什么"可正常处理）
-- 触发 daily-papers 流水线时常用"今日论文推荐 + 静默 + 一句话回报"的组合指令，可接受跑 20+ 分钟（1268-1392s 区间）
+- 触发 daily-papers 流水线时常用"今日论文推荐 + 静默 + 一句话回报"的组合指令，可接受跑 20+ 分钟（1268-1447s 区间）
 
 ## 已知事实
 - 关注领域：具身智能、人形机器人、NVIDIA、AI 算力与模型发布、World Action Model、Physical AI、可微渲染/3D 重建、VLA + 世界模型 + Critic 路线
@@ -86,12 +87,13 @@
 - cron 触发关键词模式："深度版"（v3.1 NVIDIA / v1.3 embodied），均含静默无中间态 + 已熟概念不解释 + 论文 14 天内
 - embodied v1.3 (2026-06-04+) 在归档时强制每篇论文加 `- Project: <url>` 行，供 awesome-physical-ai 下游 ingest
 - 单卡 24GB 资源（用于 dailypaper-video 模型串行调度）
-- daily-papers 流水线分三步：fetch（纯 Python 零 token，HF + arXiv API 打分去重富化）→ review（Claude 锐评分🔥/👀/💤）→ notes（Claude 编排 paper-reader，质量阈值≥120 行/2 公式/1 图）
+- daily-papers 流水线分三步：fetch（纯 Python 零 token，HF + arXiv API 打分去重富化）→ review（Claude 锐评分🔥/👀/💤，分必读/值得看/可跳过三桶）→ notes（Claude 编排 paper-reader，质量阈值≥120 行/2 公式/1 图）
 - daily-papers 配置在 `_shared/user-config.json`（路径、关键词、打分规则、自动化开关）
 - daily-papers review 阶段硬约束：不能凭空说"只有仿真"，必须查 `has_real_world` 字段
 - daily-papers notes 阶段会扫所有 `[[概念]]` 链接 + `method_names` 自动归类到 16 个概念子目录，并自动刷新 MOC，git 自动化可选
 - daily-papers config 中 `auto_refresh_indexes=false` 也无法阻止 paper-reader Agent 自带 MOC 刷新（仍会顺带刷目录页）
 - daily-papers fetch 阶段会受 arXiv API 429 限流影响导致池子偏小（6/05 仅 8 篇），需在汇总里点明
+- daily-papers MOC 规模参考：concept MOC ~152 篇 / paper MOC 单日 ~8 篇（6/08 数据）
 - 飞书短问候 / Cyber Policy 拒答事件：cc-connect 飞书入口可能命中 Anthropic Usage Policy 触发自动拒答（公众号链接也可能命中），需引导切模型或换适配器
 - 用户 Cyber 限流时被建议切 `claude-sonnet-4-20250514`
 - nvdiffrast / nvdiffrec / nvdiffmodeling 是 NVIDIA Research 可微渲染三件套（NVlabs 出品，Samuli Laine / Janne Hellsten / Jaakko Lehtinen 等芬兰组作者，与 StyleGAN / Instant NGP 同一拨人），与 PyTorch3D / Mitsuba 3 / Dr.Jit 并列可微渲染主流栈
@@ -136,5 +138,5 @@
 - 解读公众号长文要点结构：主线判断 → 技术三件套表格 → 实验数字 → 作者金句 → 一句话概括，附作者/公众号名
 - 改 cron 触发时间（如改成工作日）后只回一句确认表 + 不解释 cron 语法（用户已熟），表里列 cron ID + 表达式 + 含义即可
 - 用户对长文中术语追问独立词条时（如 critic），不要复述全文背景，直接给"朴素定义+Actor/Critic 对照表+为什么需要+文中各种变体清单（AlphaGo value net / RLHF reward model / o1 PRM / τ0-WM Simulator / LWD DIVL）+团队独特点"五段式
-- daily-papers 跑完只回一句话汇总：推荐文件路径 + 重点笔记篇数 + 目录页是否刷新（含因 Agent 自带行为导致的"被动刷新"也要明示）；若 fetch 池异常偏小（如 arXiv 429）要点明原因
+- daily-papers 跑完只回一句话汇总：推荐文件路径 + 重点笔记篇数（含必读分桶数）+ 目录页是否刷新（含因 Agent 自带行为导致的"被动刷新"也要明示，附 concept/paper MOC 篇数）；若 fetch 池异常偏小（如 arXiv 429）要点明原因
 - 给 embodied cron 加新字段时（如 Project URL）要在【Step 1】归档段写"绝对不要省略这一行"，避免后续抓取忘记落字段
