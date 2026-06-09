@@ -27,6 +27,10 @@ description: |
 - `GIT_COMMIT_ENABLED`
 - `GIT_PUSH_ENABLED`
 - `ENRICHED_INPUT = /tmp/daily_papers_enriched.json`
+- `ZOTERO_SYNC_ENABLED`（来自 `zotero_sync.enabled`，默认 false）
+- `ZOTERO_SYNC_TAGS`（来自 `zotero_sync.tags`，默认 `daily-papers`）
+- `ZOTERO_SYNC_FALLBACK`（来自 `zotero_sync.fallback_collection`，默认空）
+- `ZOTERO_COLLECTIONS`（来自 `zotero_sync.collections`，可选的目标分类名列表）
 
 其中：
 
@@ -102,6 +106,40 @@ paper-reader 在独立的 Task agent 中运行，不会占用主 agent 的 conte
 4. 包含 `## 关键公式` 和 `## 实验结果` section header
 5. 如果任一条件不满足，**删除文件并重新生成**
 
+### Step 2.5: 同步「必读」论文到 Zotero（默认关闭）
+
+**仅当 `ZOTERO_SYNC_ENABLED=true` 时执行**，否则整步跳过，不影响其余流程。
+
+把当天「必读」论文沉淀进本机 Zotero，并按主题精确归类。机制走 Zotero 本地 Connector（端口 23119），不写底层数据库，零风险。
+
+1. **前置检查**：确认 Zotero 正在运行：
+   ```bash
+   curl -s -m3 http://127.0.0.1:23119/connector/ping >/dev/null && echo OK
+   ```
+   不通则告知用户「Zotero 未运行，已跳过 Zotero 同步」，**继续后续步骤，不报错**。
+
+2. **为每篇「必读」论文判定目标分类**：从可用分类（见 `ZOTERO_COLLECTIONS`，当前为 `World Model / Robot Policy / Humanoid / Navigation / Reinforcement Learning / SceneGraph / SpatialVerse / InstanceSegmentation / Dataset`）中，**按论文主题选最匹配的一个**。判断依据与分流表/笔记分类一致（方法名、章节、摘要主题）。纯数据集/benchmark 类论文归 `Dataset`。拿不准就用 `ZOTERO_SYNC_FALLBACK`（为空则留在 My Library 根）。
+
+3. **组装 batch 文件**：写一个 JSON 到 `/tmp/zotero_sync_list.json`，每篇一项：
+   ```json
+   [
+     {"url": "https://arxiv.org/abs/XXXX", "collection": "World Model"},
+     {"url": "https://arxiv.org/abs/YYYY", "collection": "Robot Policy"}
+   ]
+   ```
+   `url` 用论文的 arXiv 链接;`collection` 用第 2 步判定的分类名。
+
+4. **执行同步**：
+   ```bash
+   python3 ../daily-papers/sync_to_zotero.py --batch /tmp/zotero_sync_list.json \
+     --tags "{ZOTERO_SYNC_TAGS}" --fallback-collection "{ZOTERO_SYNC_FALLBACK}"
+   ```
+   脚本会自动:从 `/tmp/daily_papers_enriched.json` 取标题/作者/摘要;按 arXiv id 查重跳过已入库的;`saveItems` → `updateSession` 精确归类并打 tag。
+
+5. 把脚本输出的「新增 / 已存在跳过 / 失败」计数记下,完成时一并汇报。
+
+> 说明:Zotero 是输入源也可作为沉淀目标,但此步**只同步「必读」**,与生成笔记的范围一致;「值得看/可跳过」不入库。
+
 ### Step 3: 笔记链接回填
 
 论文笔记全部生成完成后，将笔记链接回填到当天的推荐文件中。
@@ -172,6 +210,7 @@ cd {VAULT_PATH} && git add -A && git commit -m "daily papers: notes YYYY-MM-DD"
 - 创建了多少个新概念
 - 生成了多少篇论文笔记
 - 回填了多少个笔记链接
+- 如果开启了 Zotero 同步:入库 Zotero 多少篇（新增 / 已存在跳过 / 失败）
 - 流水线全部完成
 
 ## 注意事项

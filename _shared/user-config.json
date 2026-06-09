@@ -78,5 +78,22 @@
     "auto_refresh_indexes": true,
     "git_commit": false,
     "git_push": false
+  },
+  "zotero_sync": {
+    "enabled": false,
+    "tier": "必读",
+    "tags": "daily-papers",
+    "fallback_collection": "",
+    "collections": [
+      "World Model",
+      "Robot Policy",
+      "Humanoid",
+      "Navigation",
+      "Reinforcement Learning",
+      "SceneGraph",
+      "SpatialVerse",
+      "InstanceSegmentation",
+      "Dataset"
+    ]
   }
 }
