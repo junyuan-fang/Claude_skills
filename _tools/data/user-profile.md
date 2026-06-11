@@ -39,19 +39,19 @@
 
 ## 近期项目
 - 通过 cc-connect 在微信/飞书端与 Claude 对话，工作目录 `/home/xinmiao/code/claude_bot`
-- 每日 NVIDIA 新闻图文推送，cron ID `a285150d`，工作日 `0 8 * * 1-5`（v3.1 静默深度版：头条 + 深度 + 单图，三段间隔 30s）；6/04、6/05、6/08、6/09、6/10 临时调到 07:00 跑过，响应区间 48-240s
-- 每日具身智能新闻图文推送，cron ID `d667c0db`，工作日 `0 12 * * 1-5`（v1.3：行业 + 论文混编，论文必须 14 天内，HF daily 优先，arXiv ID YYMM 粗筛 + abstract 精校），响应 92-244s
+- 每日 NVIDIA 新闻图文推送，cron ID `a285150d`，工作日 `0 8 * * 1-5`（v3.1 静默深度版：头条 + 深度 + 单图，三段间隔 30s）；6/04、6/05、6/08-6/11 临时调到 07:00 跑过，响应区间 48-257s
+- 每日具身智能新闻图文推送，cron ID `d667c0db`，工作日 `0 12 * * 1-5`（v1.3：行业 + 论文混编，论文必须 14 天内，HF daily 优先，arXiv ID YYMM 粗筛 + abstract 精校），响应 92-249s
 - embodied v1.3 6/04 起新增硬约束：每篇论文归档时必须加 `- Project: <url>` 行（项目主页 > GitHub > demo，缺失写 N/A），供下游 awesome-physical-ai 自动 ingest
 - 归档目录 `~/code/claude_bot/news_archive/`（NVIDIA + embodied 两套完整版 markdown）
 - 集成 huangkiki/dailypaper-skills：真文件在 `~/code/Claude_skills/`，上游 repo 留在 `~/code/claude_bot/dailypaper-skills/` 反向软链供 git pull
 - dailypaper-video 流水线 `~/code/claude_bot/dailypaper-video/`：7 阶段把日推荐 md 转 1080p 竖屏 mp4，串行调度 F5-TTS → faster-whisper → SDXL Lightning → ffmpeg NVENC，准备投 YouTube Shorts（手动审核，v1 不自动上传）
 - 已产出首版样片 `2026-05-20-papers.mp4`（1080p / 60-90s / 3.89 MB / 8 篇 2605.xxxxx 论文，全部 14 天内）
 - daily-papers 全流水线已多次跑通：推荐文件落 `~/ObsidianVault/DailyPapers/YYYY-MM-DD-论文推荐.md`，重点笔记 ≥120 行/2 公式/1 图过质检，paper-reader Agent 自带 MOC 刷新会顺带刷目录页（即便 config `auto_refresh_indexes=false`）
-- 已跑通日：6/04（21 篇池/3 篇笔记 minWM+OmniDreams+GN0，1392s）、6/05（8 篇池受 arXiv 429 限流/2 篇笔记 Cosmos3+GRAIL，1268s）、6/08（20 篇池/必读 3 值得看 13 可跳过 4，笔记 PiL-World+WLA+DexFuture，concept MOC 152/paper MOC 8，1447s）、6/09（20 篇池/必读 3 值得看 14 可跳过 3，笔记 STRIPS-WM+AdaWAM+LARA，concept MOC 190/paper MOC 11，1269s）、6/10（19 篇池/必读 3 值得看 13 可跳过 3，笔记 LatentSpatialMemory+Video2Sim2Real+MotionWAM，concept MOC 235/paper MOC 14，1164s）
-- 关注方向包含 World Action Model (WAM)、Physical AI、VLA、Diffusion Policy、Sim2Real、τ0-WM 世界模型、Critic 驱动 RL 后训练
+- 已跑通日：6/04（21 篇池/3 篇笔记 minWM+OmniDreams+GN0，1392s）、6/05（8 篇池受 arXiv 429 限流/2 篇笔记 Cosmos3+GRAIL，1268s）、6/08（20 篇池/必读 3 值得看 13 可跳过 4，笔记 PiL-World+WLA+DexFuture，concept MOC 152/paper MOC 8，1447s）、6/09（20 篇池/必读 3 值得看 14 可跳过 3，笔记 STRIPS-WM+AdaWAM+LARA，concept MOC 190/paper MOC 11，1269s）、6/10（19 篇池/必读 3 值得看 13 可跳过 3，笔记 LatentSpatialMemory+Video2Sim2Real+MotionWAM，concept MOC 235/paper MOC 14，1164s）、6/11（19 篇池/必读 3 值得看 13 可跳过 3，笔记 WorldOlympiad+TacForeSight+ManiSplat，concept MOC 288/paper MOC 17，1174s）
+- 关注方向包含 World Action Model (WAM)、Physical AI、VLA、Diffusion Policy、Sim2Real、τ0-WM 世界模型、Critic 驱动 RL 后训练、tactile foresight、3D Gaussian Splatting 操作
 - 持续探索微信图片接口节流规律，做频率 vs 日累计的对照实验
 - 已开始使用飞书通道（session id `ou_…` 前缀），可在飞书端触发任务；飞书直传 mp4 会报 `code=230055`，需走封面图 + zip 打包
-- 两个日推 cron 长期稳定运行，响应时间 48–244 秒区间，无中间态噪音
+- 两个日推 cron 长期稳定运行，响应时间 48–257 秒区间，无中间态噪音
 
 ## 沟通习惯
 - 用中文交流，语气随意，偶有错别字或被掐断的半句话（如 deam0 = demo、健 = 建、dialypaper = dailypaper、leverb = LeVERB、洗 = 稍、nvidiafffinc / nv diff = nvdiffrast）
@@ -93,7 +93,7 @@
 - daily-papers notes 阶段会扫所有 `[[概念]]` 链接 + `method_names` 自动归类到 16 个概念子目录，并自动刷新 MOC，git 自动化可选
 - daily-papers config 中 `auto_refresh_indexes=false` 也无法阻止 paper-reader Agent 自带 MOC 刷新（仍会顺带刷目录页）
 - daily-papers fetch 阶段会受 arXiv API 429 限流影响导致池子偏小（6/05 仅 8 篇），需在汇总里点明
-- daily-papers MOC 规模参考（增长趋势）：concept MOC 152 篇（6/08）→ 190 篇（6/09）→ 235 篇（6/10）/ paper MOC 8（6/08）→ 11（6/09）→ 14（6/10），日增约 30-45 概念 + 3 篇论文
+- daily-papers MOC 规模参考（增长趋势）：concept MOC 152 篇（6/08）→ 190 篇（6/09）→ 235 篇（6/10）→ 288 篇（6/11）/ paper MOC 8（6/08）→ 11（6/09）→ 14（6/10）→ 17（6/11），日增约 30-50 概念 + 3 篇论文
 - 飞书短问候 / Cyber Policy 拒答事件：cc-connect 飞书入口可能命中 Anthropic Usage Policy 触发自动拒答（公众号链接也可能命中），需引导切模型或换适配器
 - 用户 Cyber 限流时被建议切 `claude-sonnet-4-20250514`
 - nvdiffrast / nvdiffrec / nvdiffmodeling 是 NVIDIA Research 可微渲染三件套（NVlabs 出品，Samuli Laine / Janne Hellsten / Jaakko Lehtinen 等芬兰组作者，与 StyleGAN / Instant NGP 同一拨人），与 PyTorch3D / Mitsuba 3 / Dr.Jit 并列可微渲染主流栈
