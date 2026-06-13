@@ -39,8 +39,8 @@
 
 ## 近期项目
 - 通过 cc-connect 在微信/飞书端与 Claude 对话，工作目录 `/home/xinmiao/code/claude_bot`
-- 每日 NVIDIA 新闻图文推送，cron ID `a285150d`，工作日 `0 8 * * 1-5`（v3.1 静默深度版：头条 + 深度 + 单图，三段间隔 30s）；6/04、6/05、6/08-6/12 临时调到 07:00 跑过，响应区间 48-310s
-- 每日具身智能新闻图文推送，cron ID `d667c0db`，工作日 `0 12 * * 1-5`（v1.3：行业 + 论文混编，论文必须 14 天内，HF daily 优先，arXiv ID YYMM 粗筛 + abstract 精校），响应 92-249s
+- 每日 NVIDIA 新闻图文推送，cron ID `a285150d`，工作日 `0 8 * * 1-5`（v3.1 静默深度版：头条 + 深度 + 单图，三段间隔 30s）；6/04、6/05、6/08-6/12 临时调到 07:00 跑过，响应区间 48-310s（6/12 用时 310s 为近期峰值）
+- 每日具身智能新闻图文推送，cron ID `d667c0db`，工作日 `0 12 * * 1-5`（v1.3：行业 + 论文混编，论文必须 14 天内，HF daily 优先，arXiv ID YYMM 粗筛 + abstract 精校），响应 92-249s；6/12 未跑（仅 NVIDIA + daily-papers）
 - embodied v1.3 6/04 起新增硬约束：每篇论文归档时必须加 `- Project: <url>` 行（项目主页 > GitHub > demo，缺失写 N/A），供下游 awesome-physical-ai 自动 ingest
 - 归档目录 `~/code/claude_bot/news_archive/`（NVIDIA + embodied 两套完整版 markdown）
 - 集成 huangkiki/dailypaper-skills：真文件在 `~/code/Claude_skills/`，上游 repo 留在 `~/code/claude_bot/dailypaper-skills/` 反向软链供 git pull
@@ -94,6 +94,7 @@
 - daily-papers config 中 `auto_refresh_indexes=false` 也无法阻止 paper-reader Agent 自带 MOC 刷新（仍会顺带刷目录页）
 - daily-papers fetch 阶段会受 arXiv API 429 限流影响导致池子偏小（6/05 仅 8 篇），需在汇总里点明
 - daily-papers MOC 规模参考（增长趋势）：concept MOC 152 篇（6/08）→ 190（6/09）→ 235（6/10）→ 288（6/11，6/12 持平）/ paper MOC 8（6/08）→ 11（6/09）→ 14（6/10）→ 17（6/11）→ 20（6/12），日增约 30-50 概念 + 3 篇论文（concept MOC 可能阶段性饱和）
+- daily-papers 流水线耗时区间 970-1447s（约 16-25 分钟），6/12 单跑 970s 为目前最快
 - 飞书短问候 / Cyber Policy 拒答事件：cc-connect 飞书入口可能命中 Anthropic Usage Policy 触发自动拒答（公众号链接也可能命中），需引导切模型或换适配器
 - 用户 Cyber 限流时被建议切 `claude-sonnet-4-20250514`
 - nvdiffrast / nvdiffrec / nvdiffmodeling 是 NVIDIA Research 可微渲染三件套（NVlabs 出品，Samuli Laine / Janne Hellsten / Jaakko Lehtinen 等芬兰组作者，与 StyleGAN / Instant NGP 同一拨人），与 PyTorch3D / Mitsuba 3 / Dr.Jit 并列可微渲染主流栈
