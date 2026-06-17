@@ -39,15 +39,15 @@
 
 ## 近期项目
 - 通过 cc-connect 在微信/飞书端与 Claude 对话，工作目录 `/home/xinmiao/code/claude_bot`
-- 每日 NVIDIA 新闻图文推送，cron ID `a285150d`，工作日 `0 8 * * 1-5`（v3.1 静默深度版：头条 + 深度 + 单图，三段间隔 30s）；6/04-6/16 多日临时调到 07:00 跑过，响应区间 48-387s（6/16 用时 387s 为近期峰值）
-- 每日具身智能新闻图文推送，cron ID `d667c0db`，工作日 `0 12 * * 1-5`（v1.3：行业 + 论文混编，论文必须 14 天内，HF daily 优先，arXiv ID YYMM 粗筛 + abstract 精校），响应 92-249s；6/12、6/15、6/16 未跑 embodied（仅 NVIDIA + daily-papers）
+- 每日 NVIDIA 新闻图文推送，cron ID `a285150d`，工作日 `0 8 * * 1-5`（v3.1 静默深度版：头条 + 深度 + 单图，三段间隔 30s）；6/04-6/17 多日临时调到 07:00 跑过，响应区间 48-387s（6/16 用时 387s 为近期峰值）
+- 每日具身智能新闻图文推送，cron ID `d667c0db`，工作日 `0 12 * * 1-5`（v1.3：行业 + 论文混编，论文必须 14 天内，HF daily 优先，arXiv ID YYMM 粗筛 + abstract 精校），响应 92-249s；6/12、6/15、6/16 未跑 embodied（仅 NVIDIA + daily-papers），6/17 临时 07:05 跑过用时 239s
 - embodied v1.3 6/04 起新增硬约束：每篇论文归档时必须加 `- Project: <url>` 行（项目主页 > GitHub > demo，缺失写 N/A），供下游 awesome-physical-ai 自动 ingest
 - 归档目录 `~/code/claude_bot/news_archive/`（NVIDIA + embodied 两套完整版 markdown）
 - 集成 huangkiki/dailypaper-skills：真文件在 `~/code/Claude_skills/`，上游 repo 留在 `~/code/claude_bot/dailypaper-skills/` 反向软链供 git pull
 - dailypaper-video 流水线 `~/code/claude_bot/dailypaper-video/`：7 阶段把日推荐 md 转 1080p 竖屏 mp4，串行调度 F5-TTS → faster-whisper → SDXL Lightning → ffmpeg NVENC，准备投 YouTube Shorts（手动审核，v1 不自动上传）
 - 已产出首版样片 `2026-05-20-papers.mp4`（1080p / 60-90s / 3.89 MB / 8 篇 2605.xxxxx 论文，全部 14 天内）
 - daily-papers 全流水线已多次跑通：推荐文件落 `~/ObsidianVault/DailyPapers/YYYY-MM-DD-论文推荐.md`，重点笔记 ≥120 行/2 公式/1 图过质检，paper-reader Agent 自带 MOC 刷新会顺带刷目录页（即便 config `auto_refresh_indexes=false`）
-- 已跑通日：6/04（21 篇/3 笔记 minWM+OmniDreams+GN0，1392s）、6/05（8 篇受 arXiv 429/2 笔记 Cosmos3+GRAIL，1268s）、6/08（20 篇/必读3/笔记 PiL-World+WLA+DexFuture，concept 152/paper 8，1447s）、6/09（20 篇/必读3/笔记 STRIPS-WM+AdaWAM+LARA，concept 190/paper 11，1269s）、6/10（19 篇/必读3/笔记 LatentSpatialMemory+Video2Sim2Real+MotionWAM，concept 235/paper 14，1164s）、6/11（19 篇/必读3/笔记 WorldOlympiad+TacForeSight+ManiSplat，concept 288/paper 17，1174s）、6/12（20 篇/必读3/笔记 WMSD+EmbodiedR1.5+APT，concept 288/paper 20，970s）、6/15（异常日：arXiv API 超时，HF Trending 仅 8 篇 LLM/T2I 跨界，推荐文件仅 4 篇/必读 0/笔记 0，concept 288/paper 20 不变，672s）、6/16（19 篇/必读3/笔记 ContactWorld+Mu0+WEAVER，concept 288/paper 23，1159s）
+- 已跑通日：6/04（21 篇/3 笔记 minWM+OmniDreams+GN0，1392s）、6/05（8 篇受 arXiv 429/2 笔记 Cosmos3+GRAIL，1268s）、6/08（20 篇/必读3/笔记 PiL-World+WLA+DexFuture，concept 152/paper 8，1447s）、6/09（20 篇/必读3/笔记 STRIPS-WM+AdaWAM+LARA，concept 190/paper 11，1269s）、6/10（19 篇/必读3/笔记 LatentSpatialMemory+Video2Sim2Real+MotionWAM，concept 235/paper 14，1164s）、6/11（19 篇/必读3/笔记 WorldOlympiad+TacForeSight+ManiSplat，concept 288/paper 17，1174s）、6/12（20 篇/必读3/笔记 WMSD+EmbodiedR1.5+APT，concept 288/paper 20，970s）、6/15（异常日：arXiv API 超时，HF Trending 仅 8 篇 LLM/T2I 跨界，推荐文件仅 4 篇/必读 0/笔记 0，concept 288/paper 20 不变，672s）、6/16（19 篇/必读3/笔记 ContactWorld+Mu0+WEAVER，concept 288/paper 23，1159s）、6/17（19 篇/必读3/笔记 DreamXWorld+GAM+QwenRobotWorld，concept 288/paper 26，2345s，目前最长耗时记录）
 - 关注方向包含 World Action Model (WAM)、Physical AI、VLA、Diffusion Policy、Sim2Real、τ0-WM 世界模型、Critic 驱动 RL 后训练、tactile foresight、3D Gaussian Splatting 操作、contact-rich manipulation 世界模型
 - 持续探索微信图片接口节流规律，做频率 vs 日累计的对照实验
 - 已开始使用飞书通道（session id `ou_…` 前缀），可在飞书端触发任务；飞书直传 mp4 会报 `code=230055`，需走封面图 + zip 打包
@@ -69,7 +69,7 @@
 - 飞书 reply chain 回复时，新内容常附在引用块尾部一行（如末尾单独一句"nv diff 的"），需要扫到引用结尾才能拿到真正问题
 - 阅读长文后会就文中术语（如"critic"）追问独立词条，期待助手不重复全文背景、直接给定义+变体表+在该语境的特殊点
 - 公众号链接发到飞书可能触发 Cyber Policy 拒答（同一 URL 改在飞书会话里追问"这篇主要讲了什么"可正常处理）
-- 触发 daily-papers 流水线时常用"今日论文推荐 + 静默 + 一句话回报"的组合指令，可接受跑 11-25 分钟（672-1447s 区间）
+- 触发 daily-papers 流水线时常用"今日论文推荐 + 静默 + 一句话回报"的组合指令，可接受跑 11-39 分钟（672-2345s 区间）
 
 ## 已知事实
 - 关注领域：具身智能、人形机器人、NVIDIA、AI 算力与模型发布、World Action Model、Physical AI、可微渲染/3D 重建、VLA + 世界模型 + Critic 路线
@@ -93,8 +93,8 @@
 - daily-papers notes 阶段会扫所有 `[[概念]]` 链接 + `method_names` 自动归类到 16 个概念子目录，并自动刷新 MOC，git 自动化可选
 - daily-papers config 中 `auto_refresh_indexes=false` 也无法阻止 paper-reader Agent 自带 MOC 刷新（仍会顺带刷目录页）
 - daily-papers fetch 阶段会受 arXiv API 429 限流/超时影响导致池子偏小（6/05 仅 8 篇，6/15 arXiv 完全超时只剩 HF Trending 4 篇有效），需在汇总里点明
-- daily-papers MOC 规模参考（增长趋势）：concept MOC 152 篇（6/08）→ 190（6/09）→ 235（6/10）→ 288（6/11，6/12、6/15、6/16 均持平）/ paper MOC 8（6/08）→ 11（6/09）→ 14（6/10）→ 17（6/11）→ 20（6/12，6/15 持平）→ 23（6/16）；concept MOC 在 288 出现持续饱和平台期，paper MOC 在异常日（如 6/15）维持不变
-- daily-papers 流水线耗时区间 672-1447s（约 11-25 分钟），6/15 仅 672s 为目前最快（因池小+无笔记）
+- daily-papers MOC 规模参考（增长趋势）：concept MOC 152 篇（6/08）→ 190（6/09）→ 235（6/10）→ 288（6/11，6/12、6/15、6/16、6/17 均持平）/ paper MOC 8（6/08）→ 11（6/09）→ 14（6/10）→ 17（6/11）→ 20（6/12，6/15 持平）→ 23（6/16）→ 26（6/17）；concept MOC 在 288 出现持续饱和平台期（已稳定 7 天），paper MOC 持续线性增长
+- daily-papers 流水线耗时区间 672-2345s（约 11-39 分钟），6/15 仅 672s 为目前最快（因池小+无笔记），6/17 用时 2345s 为目前最长（笔记生成阶段更耗时）
 - daily-papers 可能出现零必读零笔记日（如 6/15：arXiv API 超时 + HF Trending 多为 LLM/T2I 跨界，无新 robotics 必读）
 - 飞书短问候 / Cyber Policy 拒答事件：cc-connect 飞书入口可能命中 Anthropic Usage Policy 触发自动拒答（公众号链接也可能命中），需引导切模型或换适配器
 - 用户 Cyber 限流时被建议切 `claude-sonnet-4-20250514`
