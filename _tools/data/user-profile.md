@@ -1,1 +1,40 @@
-Failed to authenticate. API Error: 401 Invalid authentication credentials
+# 用户画像
+
+## 偏好风格
+- 极度重视静默执行,反感"已推送/任务完成/段X已发"等中间态状态消息,只看实际内容
+- 收尾只要一句话报告(路径 + 关键数字 + 目录刷新状态),拒绝复述过程
+- 文字推送要求口语化、避免并列符堆词,多用"x 倍、y 万、z 亿"具体数字
+- 每条新闻必须做"尽调式扩展":公司背景 + 技术细节 + 数据指标 + 业内对比,让外行 30 秒掌握 why-it-matters
+- 反感对已熟概念(VLA/WAM/Sim2Real/Diffusion Policy/VLM/RL/Imitation Learning/MPC 等)做解释,只允许新生/冷门术语 1 句带过
+
+## 技术栈与角色
+- 深度关注 AI 基础设施、具身智能、机器人(VLA/世界模型/Diffusion Policy/Sim2Real)、CV/DL 论文
+- 熟悉 NVIDIA 硬件栈(GB300/Rubin/Blackwell/DGX Spark)、光互连、产业链上下游
+- 熟悉中美具身智能玩家:宇树、智元、银河通用、星海图、星动纪元、Figure、1X、Apptronik、Tesla Optimus 等
+- 使用 Obsidian 作为论文笔记库(~/ObsidianVault/DailyPapers/),维护 concept MOC / paper MOC
+- 通过 cc-send-safe / cc-connect 推送到飞书或微信通道
+
+## 近期项目
+- 每日 NVIDIA 新闻推送(深度版 v3.1):头条快报 + 深度展开 + 1 张配图三段式,严格 sleep 30s 防节流
+- 每日具身智能新闻推送(v1.3):行业 + 论文混编,论文必须 14 天内(HuggingFace daily 优先 + arXiv ID YYMM 粗筛 + abstract 页 submission date 精校)
+- daily-papers 三步流水线(fetch → review → notes),日产推荐 ~20 篇、必读 3 篇并生成笔记
+- 归档目录 /home/xinmiao/code/claude_bot/news_archive/,具身智能论文归档强制 `- Project: <url>` 行供下游 awesome-physical-ai ingest
+
+## 沟通习惯
+- 任务指令极度详尽、分步骤分章节,带【绝对禁止】黑名单清单
+- 用中文沟通,混用英文术语(VLA、benchmark、deep dive 等)
+- 接受长响应等待时间(论文流水线常超 15 分钟)
+
+## 已知事实
+- 邮箱 fangjunyuan1@gmail.com
+- 飞书 user id: ou_90d9f956a6570c6cd27a3d1bb5377138
+- 论文推荐稳定产出格式:19-20 篇 / 必读 3 / 值得看 13 / 可跳过 3-4
+- concept MOC 长期稳定在 288 篇,paper MOC 持续增长(23 → 32 篇)
+
+## 注意事项
+- 配图严格 1 张,绝不发第 2 张(必触发节流锁死)
+- 图片失败后绝不重试、绝不再发任何文字
+- 文字推送之间必须 sleep 30,不可省略
+- 论文日期硬校验:超 14 天的旧论文不能放进头条/deep dive,只能进"延伸阅读"并标注真实日期
+- 搜不到 14 天内新论文时,宁可彻底放弃论文项,绝不把老论文包装成"今日新发"
+- 2026-06-22 出现 401 认证失败,NVIDIA 和论文任务均未完成
