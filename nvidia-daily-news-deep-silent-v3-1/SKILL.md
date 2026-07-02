@@ -1,10 +1,10 @@
 ---
 name: nvidia-daily-news-deep-silent-v3-1
-description: 每日推送 NVIDIA 24h 重要新闻：先写完整深度归档，再分头条快报+深度展开+1张配图三段式推送，每段间隔 30s，全程静默不发任何中间/收尾状态消息，规避 ret=-2 节流
-trigger_keywords: ["NVIDIA 每日新闻", "英伟达新闻推送", "nvidia daily news", "深度版新闻", "静默推送 NVIDIA"]
+description: 每日通过 cc-send-safe 推送 NVIDIA 24h 重要新闻，归档+头条快报+深度展开+1张配图四段式，全程静默不发中间状态消息，规避 ret=-2 节流
+trigger_keywords: ["NVIDIA 每日新闻", "英伟达新闻推送", "nvidia daily news", "nvidia daily", "NVIDIA 24h", "深度版新闻", "静默推送 NVIDIA", "nvidia 深度版"]
 source: date=2026-06-30
-version: 1
-updated_at: 2026-07-01T03:31:28
+version: 2.1
+updated_at: 2026-07-03T00:00:00
 ---
 
 # NVIDIA 每日新闻深度版静默推送 v3.1
@@ -17,7 +17,7 @@ updated_at: 2026-07-01T03:31:28
 
 1. 搜 NVIDIA 最近 24 小时重要新闻（新品/合作/技术/财报/股价/地缘），优先源：nvidianews.nvidia.com、blogs.nvidia.com、Bloomberg、CNBC、Stocktitan、TechCrunch。
 2. 每条新闻做尽调式扩展（标准：让不熟该领域的人 30 秒掌握 why-it-matters）：
-   - 公司/产品背景：例如 "IREN 是澳洲挖矿转型 AI 算力的数据中心运营商"、"GR00T 是 NVIDIA 通用人形机器人基础模型系列"
+   - 公司/产品背景：例如 "IREN 是澳洲挖矿转型 AI 算力的数据中心运营商"、"Corning 光纤玻璃供应商"、"GR00T 是 NVIDIA 通用人形机器人基础模型系列"
    - 技术细节：模型参数量、训练数据规模、benchmark、推理延迟、对标 SOTA；硬件平台（GB300/Rubin/Blackwell/DGX Spark）；网络与光互连规格
    - 数据/财务指标：合作金额、产能（GW/产线/倍数）、新增岗位、ROI、目标价升降幅度、股价反应
    - 业内意义：竞争对比（vs AMD/Broadcom/华为昇腾/SK 海力士）、产业链位置
