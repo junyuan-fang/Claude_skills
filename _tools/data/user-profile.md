@@ -10,8 +10,8 @@
 - 一句话报告允许在必读数量异常(如仅 2 篇 / 0 篇)时补充原因(如"余下多为前日重推"、"arXiv/HF 真空期")
 - 必读 0 篇时接受"节省 paper-reader 名额"策略,不强求硬凑笔记
 - 大丰收日(30 篇全新零重合)也允许在一句话报告里点明,作为质量信号
-- 一句话报告可在信号异常时补充结构性观察(如"WM 主题单日 6 篇"、"Alibaba AMAP 一日五发"、"2607.xxxxx 7 月洪峰启动"、"Physics-informed WM 成流派"、"Cosmos 3 冠榜"、"VLA test-time 五部曲"、"GigaWorld-1 WM as evaluator 罗盘"、"WM 定义+罗盘时代"、"VLA foundation 数据军备升级")
-- 一句话报告可在单 agent 分发未覆盖某些必读时点明未覆盖论文名(如"VLA-Corrector 和 TacImag 未覆盖"、"RynnWorld-4D 和 WMRoadmap 未覆盖")作为质量说明
+- 一句话报告可在信号异常时补充结构性观察(如"WM 主题单日 6 篇"、"Physics-informed WM 成流派"、"Cosmos 3 冠榜"、"GigaWorld-1 WM as evaluator 罗盘"、"WM 定义+罗盘时代"、"VLA foundation 数据军备升级"、"Sim 基础设施代际更替周"、"触觉 FM 六部曲"、"test-time 学习浪潮")
+- 一句话报告可点明单 agent 分发未覆盖的必读论文名(如"EmbodiedGenV2 和 TouchWorld 未覆盖")作为质量说明,笔记可附关键 benchmark 数字(如 WAM-TTT 真机 Progress 46.2% vs π0.5 14.8%)
 - 询问功能现状时(如"你现在有 X 吗"、"我记得有一个 skill 只做 Y 对吗")期待明确 yes/no + 现状机制 + 开关配置路径 + 补跑选项,不要含糊
 
 ## 技术栈与角色
@@ -39,22 +39,23 @@
 ## 已知事实
 - 邮箱 fangjunyuan1@gmail.com
 - 飞书 user id: ou_90d9f956a6570c6cd27a3d1bb5377138
-- 论文推荐产出格式:20-30 篇 / 必读 0-3 / 值得看 1-14 / 可跳过 4-29(必读数会因当日重推率与 arXiv/HF 真空期波动)
-- concept MOC 自 2026-06-29 起从 288 篇扩张到 570 条(2026-07-09),paper MOC 从 26 → 60 条
+- 论文推荐产出格式:20-30 篇 / 必读 0-3 / 值得看 1-15 / 可跳过 4-29(必读数会因当日重推率与 arXiv/HF 真空期波动)
+- concept MOC 自 2026-06-29 起从 288 篇扩张到 578 条(2026-07-10),paper MOC 从 26 → 61 条
 - 日常触发时刻:NVIDIA 07:00、具身智能 07:05、论文推荐 07:15(每日固定节奏)
-- 论文流水线耗时波动大:2026-06-29 耗时 1510s、06-30 耗时 1237s、07-01 真空期仅 329s、07-02 大丰收 1807s、07-03 洪峰 907s、07-06 耗时 1011s、07-07 耗时 1498s、07-08 耗时 1396s、07-09 耗时 900s
-- NVIDIA 任务耗时波动:2026-06-30 485s、07-01 433s、07-02 276s、07-03 370s、07-06 566s、07-07 386s、07-08 461s、07-09 288s;常态约 4-10 分钟
+- 论文流水线耗时波动大:2026-06-29 耗时 1510s、06-30 耗时 1237s、07-01 真空期仅 329s、07-02 大丰收 1807s、07-03 洪峰 907s、07-06 耗时 1011s、07-07 耗时 1498s、07-08 耗时 1396s、07-09 耗时 900s、07-10 耗时 1646s
+- NVIDIA 任务耗时波动:2026-06-30 485s、07-01 433s、07-02 276s、07-03 370s、07-06 566s、07-07 386s、07-08 461s、07-09 288s、07-10 320s;常态约 4-10 分钟
 - 具身智能任务耗时约 3-8 分钟(2026-07-02 为 454s、07-09 为 340s)
 - 2026-07-03 arXiv 2607.xxxxx 段号启动,进入 7 月投稿洪峰;WM(世界模型)单日 6 篇,Alibaba AMAP 单日投递 5 篇
 - 2026-07-06 观察到 Physics-informed WM 明确成流派、Latent WM planning 三大新约束、CN 大厂 embodied 主题多元化
 - 2026-07-07 观察到 Cosmos 3 冠榜、VLA test-time 五部曲、触觉 VLA 五部曲收官
 - 2026-07-08 观察到 GigaWorld-1 提出 "WM as evaluator" 罗盘、Mask2Real-WM 开辟 sim2real 第四派、SH AI Lab / 清华 / 同济 国内 embodied 大厂论文栈化
 - 2026-07-09 观察到 WM 进入"定义 + 罗盘"时代(SH AI Lab WMRoadmap + Alibaba DAMO RynnWorld-4D)、VLA foundation 数据军备升级(LingBot-VLA 2.0 训练数据 60K 小时)
+- 2026-07-10 观察到 Sim 基础设施代际更替周(EmbodiedGenV2 + SPEAR)、触觉 FM 六部曲(TouchWorld)、test-time 学习浪潮(WAM-TTT 真机 Progress 46.2% vs π0.5 14.8%)
 - Zotero 同步配置位于 ~/.claude/skills/_shared/user-config.local.json 的 zotero_sync 段,默认 enabled=false,tier="必读",tags 默认 `daily-papers`
 - Zotero collections 白名单:World Model / Robot Policy / Humanoid / Navigation / Reinforcement Learning / SceneGraph / SpatialVerse / InstanceSegmentation / Dataset
 - Zotero 同步按 arXiv id 查重,已入库跳过
-- 未同步到 Zotero 的必读积压(截至 2026-07-09 约 21+ 篇):HallucinationWM / IDEA / HumanoidDART / PhysiFormer / AgileFlightGen / SynPriorS2R / QwenRobotManip / DVGWM / 3DPointWM / Valdi / PVWM / PhysMani / WorldSample / ACID / Cosmos3 / VLA-Corrector / TacImag / GigaWorld-1 / Mask2Real-WM / MultiplayerWM / LingBotVLA2 / RynnWorld-4D / WMRoadmap
-- 论文推荐单 agent 分发覆盖不全已连续三日:07-07 仅 Cosmos3(1/3)、07-08 仅 GigaWorld-1(1/3)、07-09 仅 LingBotVLA2(1/3)
+- 未同步到 Zotero 的必读积压(截至 2026-07-10 约 24+ 篇):HallucinationWM / IDEA / HumanoidDART / PhysiFormer / AgileFlightGen / SynPriorS2R / QwenRobotManip / DVGWM / 3DPointWM / Valdi / PVWM / PhysMani / WorldSample / ACID / Cosmos3 / VLA-Corrector / TacImag / GigaWorld-1 / Mask2Real-WM / MultiplayerWM / LingBotVLA2 / RynnWorld-4D / WMRoadmap / WAM-TTT / EmbodiedGenV2 / TouchWorld
+- 论文推荐单 agent 分发覆盖不全已连续四日:07-07 仅 Cosmos3、07-08 仅 GigaWorld-1、07-09 仅 LingBotVLA2、07-10 仅 WAM-TTT(均 1/3)
 
 ## 注意事项
 - 配图严格 1 张,绝不发第 2 张(必触发节流锁死)
@@ -67,4 +68,5 @@
 - 当日推荐被前日重推稀释时(如 2026-06-30 必读仅 2 篇、2026-07-01 必读 0 篇且 23/30 为 6/29-6/30 重推),需在一句话报告中点明原因
 - Zotero 同步默认关闭,除非用户明确开启或说"顺手也同步到 Zotero",cron 不主动跑该步
 - 开启 Zotero 同步前需确认客户端在跑(`curl 127.0.0.1:23119/connector/ping`)
-- 单 agent 分发必读笔记时若存在覆盖不全,需在一句话报告中显式说明未覆盖的论文名;07-07 至 07-09 连续三日仅 1/3 覆盖已成固定模式,分发策略亟需调整(如按必读篇数拆多 agent 或串行补跑)
+- 用户曾追问 Zotero 沉淀现状(2026-07-06),已获知默认关闭机制与补跑选项但尚未表态开启,后续若提"顺手同步"即执行
+- 单 agent 分发必读笔记时若存在覆盖不全,需在一句话报告中显式说明未覆盖的论文名;07-07 至 07-10 连续四日仅 1/3 覆盖已成固定模式,分发策略亟需调整(如按必读篇数拆多 agent 或串行补跑)
