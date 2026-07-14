@@ -1,17 +1,17 @@
 ---
 name: nvidia-daily-news-deep-silent-v3-1
-description: 每日通过 cc-send-safe 推送 NVIDIA 24h 重要新闻，归档深度版+头条快报+深度展开+1张配图四段式，全程静默不发任何中间/收尾状态消息，规避 ret=-2 节流
+description: 每日搜索 NVIDIA 24 小时重要新闻，写完整深度归档后按头条快报+深度展开+1 张配图三段式经 cc-send-safe 推送，全程静默不发任何中间/收尾状态消息，规避 ret=-2 节流
 trigger_keywords: ["NVIDIA 每日新闻", "英伟达新闻推送", "英伟达新闻摘要", "nvidia daily news", "nvidia daily", "NVIDIA 24h", "NVIDIA 新闻", "每日 NVIDIA", "深度版新闻", "静默推送 NVIDIA", "nvidia 深度版"]
 source: date=2026-06-30
-version: 3.2
-updated_at: 2026-07-14T00:00:00
+version: 4.3
+updated_at: 2026-07-15T00:00:00
 ---
 
 # NVIDIA 每日新闻深度版静默推送 v3.1
 
 ## 目标
 
-让用户对每条消息都有具体理解（公司背景+技术细节+数字+对比），而不是只看到关键词堆砌。四段式产出（归档深度版+头条快报+深度展开+1 张配图），全程静默，只发实际新闻内容。
+让用户对每条消息都有具体理解（公司背景+技术细节+数字+对比），而不是只看到关键词堆砌。产出四段式内容：完整深度归档（本地）+ 头条快报 + 深度展开 + 1 张配图（三次推送），全程静默，只发实际新闻内容。
 
 ## Step 1: 搜索 + 撰写归档
 
