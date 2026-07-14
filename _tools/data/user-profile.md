@@ -13,6 +13,7 @@
 - 一句话报告可在信号异常时补充结构性观察(如"WM 主题单日 6 篇"、"Physics-informed WM 成流派"、"Cosmos 3 冠榜"、"GigaWorld-1 WM as evaluator 罗盘"、"WM 定义+罗盘时代"、"VLA foundation 数据军备升级"、"Sim 基础设施代际更替周"、"触觉 FM 六部曲"、"test-time 学习浪潮"、"RoboDojo 揭示 SOTA VLA 真机成功率仅 12.8% vs 人类 100%")
 - 一句话报告必须点明单 agent 分发未覆盖的必读论文名(如"EmbodiedGenV2 和 TouchWorld 未覆盖"),笔记可附关键 benchmark 数字(如 WAM-TTT 真机 Progress 46.2% vs π0.5 14.8%)
 - 询问功能现状时(如"你现在有 X 吗"、"我记得有一个 skill 只做 Y 对吗")期待明确 yes/no + 现状机制 + 开关配置路径 + 补跑选项,不要含糊
+- 口语化短消息可能语境模糊(如"科目一"舞蹈梗),接受助手先一句话复述理解并列出待对齐点再开工
 
 ## 技术栈与角色
 - 深度关注 AI 基础设施、具身智能、机器人(VLA/世界模型/Diffusion Policy/Sim2Real)、CV/DL 论文
@@ -21,6 +22,7 @@
 - 使用 Obsidian 作为论文笔记库(~/ObsidianVault/DailyPapers/),维护 concept MOC / paper MOC
 - 通过 cc-send-safe / cc-connect 推送到飞书或微信通道
 - 本机装 Zotero 客户端,数据库在 ~/Zotero/zotero.sqlite,倾向通过本地 Connector(端口 23119)沉淀,不动 sqlite
+- 有虚拟形象内容项目:mascot 形象用 SDXL + IP-Adapter 生成,配 F5-TTS 声线,Hallo2 做 lip-sync;涉足 pose-driven 全身动作迁移视频生成(AnimateAnyone/MimicMotion/UniAnimate/Wan2.2-Animate 等候选)
 
 ## 近期项目
 - 每日 NVIDIA 新闻推送(深度版 v3.1):头条快报 + 深度展开 + 1 张配图三段式,严格 sleep 30s 防节流
@@ -28,6 +30,7 @@
 - daily-papers 三步流水线(fetch → review → notes),日产推荐常态 20-30 篇、必读 0-3 篇并生成笔记(源故障日可骤降至个位数,如 07-13 全天仅 4 篇)
 - 归档目录 /home/xinmiao/code/claude_bot/news_archive/,具身智能论文归档强制 `- Project: <url>` 行供下游 awesome-physical-ai ingest
 - Zotero 同步能力已存在但默认关闭(daily-papers-notes Step 2.5),仅"🔥 必读" tier 走 Connector 按分类精准归档,值得看/可跳过一律不进 Zotero
+- 探索用 Agent teammates 并行做舞蹈视频生成(找参考视频 + 抽 pose + 生成测试片段),2026-07-14 提出"换更好的视频把整条舞跳下来",方向尚待确认
 
 ## 沟通习惯
 - 任务指令极度详尽、分步骤分章节,带【绝对禁止】黑名单清单
@@ -35,10 +38,12 @@
 - 接受长响应等待时间(论文流水线常 5-30 分钟,NVIDIA/具身约 3-10 分钟)
 - 任务模板高度稳定,几乎逐字复用(NVIDIA v3.1 / 具身 v1.3 已固化)
 - 会追问功能现状("你现在有 X 吗"、"我记得有一个 skill 做 Y 对吗"),期待精准回忆 + 配置路径,不打太极
+- 偶发即兴短消息带梗/代号(如"科目一"),需先确认语境再执行
 
 ## 已知事实
 - 邮箱 fangjunyuan1@gmail.com
 - 飞书 user id: ou_90d9f956a6570c6cd27a3d1bb5377138
+- 时区 Asia/Shanghai
 - 论文推荐产出格式:常态 20-30 篇 / 必读 0-3 / 值得看 1-15 / 可跳过 4-29(必读数会因当日重推率、arXiv/HF 真空期与源故障波动;07-13 arXiv API 全天 timeout 时仅出 4 篇)
 - concept MOC 自 2026-06-29 起从 288 篇扩张到 608 条(2026-07-13),paper MOC 从 26 → 62 条(07-08 553/59,07-09 570/60,07-10 578/61,07-13 608/62)
 - 日常触发时刻:NVIDIA 07:00、具身智能 07:05、论文推荐 07:15(NVIDIA 与论文每日固定;具身智能非每日必发,如 07-07/07-08/07-10/07-13 未触发;07-11/07-12 全线未触发)
@@ -52,6 +57,7 @@
 - 2026-07-09 观察到 WM 进入"定义 + 罗盘"时代(SH AI Lab WMRoadmap + Alibaba DAMO RynnWorld-4D)、VLA foundation 数据军备升级(LingBot-VLA 2.0 训练数据 60K 小时)
 - 2026-07-10 观察到 Sim 基础设施代际更替周(EmbodiedGenV2 + SPEAR)、触觉 FM 六部曲(TouchWorld)、test-time 学习浪潮(WAM-TTT 真机 Progress 46.2% vs π0.5 14.8%)
 - 2026-07-13 arXiv API 全天 timeout,仅 HF trending 撑场(必读 1 值得看 1 可跳过 2);RoboDojo 六校联署 sim+real benchmark,SOTA VLA 真机成功率仅 12.8% vs 人类 100%,当日必读 1 篇全覆盖笔记
+- 2026-07-14 三个每日任务(NVIDIA 07:00 / 具身 07:05 / 论文 07:15)全部因"out of extra usage"配额耗尽失败,配额 8:30am(Asia/Shanghai)重置,全天内容缺口待补跑
 - Zotero 同步配置位于 ~/.claude/skills/_shared/user-config.local.json 的 zotero_sync 段,默认 enabled=false,tier="必读",tags 默认 `daily-papers`
 - Zotero collections 白名单:World Model / Robot Policy / Humanoid / Navigation / Reinforcement Learning / SceneGraph / SpatialVerse / InstanceSegmentation / Dataset
 - Zotero 同步按 arXiv id 查重,已入库跳过
@@ -65,9 +71,11 @@
 - 论文日期硬校验:超 14 天的旧论文不能放进头条/deep dive,只能进"延伸阅读"并标注真实日期
 - 搜不到 14 天内新论文时,宁可彻底放弃论文项,绝不把老论文包装成"今日新发"
 - 2026-06-22 NVIDIA 与论文任务均因 401 认证失败未完成,2026-06-23 起已恢复正常
+- 2026-07-14 首次出现配额耗尽("out of extra usage")导致三任务全失败,需留意 07:00-07:15 触发窗口撞上配额重置(8:30am)的风险,失败日可主动提议补跑
 - 2026-06-24 论文流水线收尾报告退化为"SkyJEPA done. Waiting on Foresight."(违反一句话报告规范,需避免在笔记仍在生成时提前回复);2026-06-25 之后已稳定标准格式
 - 当日推荐被前日重推稀释或上游源故障时(如 06-30 必读仅 2 篇、07-01 必读 0 篇、07-13 arXiv API timeout 仅 4 篇),需在一句话报告中点明原因
 - Zotero 同步默认关闭,除非用户明确开启或说"顺手也同步到 Zotero",cron 不主动跑该步
 - 开启 Zotero 同步前需确认客户端在跑(`curl 127.0.0.1:23119/connector/ping`)
 - 用户两次追问 Zotero 沉淀现状(2026-07-06 连问两次:"有自动沉淀吗"、"有一个 skill 只加关键文章对吗"),已获知默认关闭机制、tier 过滤、配置路径与补跑选项,但尚未表态开启;后续若提"顺手同步"或"补跑"即执行
 - 单 agent 分发必读笔记时若存在覆盖不全,需在一句话报告中显式说明未覆盖的论文名;07-07 至 07-10 连续四日仅 1/3 覆盖已成固定模式,必读 ≥2 篇时分发策略亟需调整(如按必读篇数拆多 agent 或串行补跑)
+- 舞蹈视频项目方向("科目一"整舞)截至 2026-07-14 尚未获用户确认,勿在未对齐前擅自开工
