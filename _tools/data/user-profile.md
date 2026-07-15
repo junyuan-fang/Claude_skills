@@ -30,7 +30,7 @@
 - daily-papers 三步流水线(fetch → review → notes),日产推荐常态 20-30 篇、必读 0-3 篇并生成笔记(源故障日可骤降至个位数,如 07-13 全天仅 4 篇)
 - 归档目录 /home/xinmiao/code/claude_bot/news_archive/,具身智能论文归档强制 `- Project: <url>` 行供下游 awesome-physical-ai ingest
 - Zotero 同步能力已存在但默认关闭(daily-papers-notes Step 2.5),仅"🔥 必读" tier 走 Connector 按分类精准归档,值得看/可跳过一律不进 Zotero
-- 探索用 Agent teammates 并行做舞蹈视频生成(找参考视频 + 抽 pose + 生成测试片段),2026-07-14 提出"换更好的视频把整条舞跳下来",方向尚待确认
+- 舞蹈视频项目:"科目一"是某段舞蹈的梗(类似科目三那种 viral 舞蹈),目标是用 mascot 形象 + pose-driven 全身动作迁移跑完整条舞蹈视频,需 Agent teammates 并行(找参考视频 + 抽 pose + 生成测试片段);截至 2026-07-14 用户尚未确认方向
 
 ## 沟通习惯
 - 任务指令极度详尽、分步骤分章节,带【绝对禁止】黑名单清单
@@ -45,24 +45,24 @@
 - 飞书 user id: ou_90d9f956a6570c6cd27a3d1bb5377138
 - 时区 Asia/Shanghai
 - 论文推荐产出格式:常态 20-30 篇 / 必读 0-3 / 值得看 1-15 / 可跳过 4-29(必读数会因当日重推率、arXiv/HF 真空期与源故障波动;07-13 arXiv API 全天 timeout 时仅出 4 篇)
-- concept MOC 自 2026-06-29 起从 288 篇扩张到 608 条(2026-07-13),paper MOC 从 26 → 62 条(07-08 553/59,07-09 570/60,07-10 578/61,07-13 608/62)
-- 日常触发时刻:NVIDIA 07:00、具身智能 07:05、论文推荐 07:15(NVIDIA 与论文每日固定;具身智能非每日必发,如 07-07/07-08/07-10/07-13 未触发;07-11/07-12 全线未触发)
-- 论文流水线耗时波动大:2026-07-02 大丰收 1807s、07-07 1498s、07-08 1396s、07-09 900s、07-10 1646s、07-13 源故障日 1232s;真空期最低 329s(07-01)
-- NVIDIA 任务耗时波动:07-07 386s、07-08 461s、07-09 288s、07-10 320s、07-13 368s;常态约 4-10 分钟
-- 具身智能任务耗时约 3-8 分钟(2026-07-02 454s、07-09 340s)
-- 2026-07-03 arXiv 2607.xxxxx 段号启动,进入 7 月投稿洪峰;WM(世界模型)单日 6 篇,Alibaba AMAP 单日投递 5 篇
-- 2026-07-06 观察到 Physics-informed WM 明确成流派、Latent WM planning 三大新约束、CN 大厂 embodied 主题多元化;当日必读 3 篇全覆盖笔记(PhysMani / WorldSample / ACID)
-- 2026-07-07 观察到 Cosmos 3 冠榜、VLA test-time 五部曲、触觉 VLA 五部曲收官
-- 2026-07-08 观察到 GigaWorld-1 提出 "WM as evaluator" 罗盘、Mask2Real-WM 开辟 sim2real 第四派、SH AI Lab / 清华 / 同济 国内 embodied 大厂论文栈化
-- 2026-07-09 观察到 WM 进入"定义 + 罗盘"时代(SH AI Lab WMRoadmap + Alibaba DAMO RynnWorld-4D)、VLA foundation 数据军备升级(LingBot-VLA 2.0 训练数据 60K 小时)
-- 2026-07-10 观察到 Sim 基础设施代际更替周(EmbodiedGenV2 + SPEAR)、触觉 FM 六部曲(TouchWorld)、test-time 学习浪潮(WAM-TTT 真机 Progress 46.2% vs π0.5 14.8%)
-- 2026-07-13 arXiv API 全天 timeout,仅 HF trending 撑场(必读 1 值得看 1 可跳过 2);RoboDojo 六校联署 sim+real benchmark,SOTA VLA 真机成功率仅 12.8% vs 人类 100%,当日必读 1 篇全覆盖笔记
-- 2026-07-14 三个每日任务(NVIDIA 07:00 / 具身 07:05 / 论文 07:15)全部因"out of extra usage"配额耗尽失败,配额 8:30am(Asia/Shanghai)重置,全天内容缺口待补跑
+- concept MOC 自 2026-06-29 起从 288 篇扩张:07-09 570/60,07-10 578/61,07-13 608/62(paper MOC 从 26 → 62)
+- 日常触发时刻:NVIDIA 07:00、具身智能 07:05、论文推荐 07:15(NVIDIA 与论文每日固定;具身智能非每日必发,如 07-07/07-08/07-10/07-13 未触发;07-11/07-12/07-14/07-15 全线或部分失败)
+- 论文流水线耗时波动大:07-02 大丰收 1807s、07-07 1498s、07-08 1396s、07-09 900s、07-10 1646s、07-13 源故障日 1232s;真空期最低 329s(07-01)
+- NVIDIA 任务耗时:07-07 386s、07-08 461s、07-09 288s、07-10 320s、07-13 368s、07-15 513s;常态约 4-10 分钟
+- 具身智能任务耗时约 3-8 分钟(07-02 454s、07-09 340s)
+- 2026-07-03 arXiv 2607.xxxxx 段号启动,进入 7 月投稿洪峰;WM 单日 6 篇,Alibaba AMAP 单日投递 5 篇
+- 2026-07-06 Physics-informed WM 明确成流派、Latent WM planning 三大新约束;当日必读 3 篇全覆盖(PhysMani / WorldSample / ACID)
+- 2026-07-07 Cosmos 3 冠榜、VLA test-time 五部曲、触觉 VLA 五部曲收官
+- 2026-07-08 GigaWorld-1 提出"WM as evaluator"罗盘、Mask2Real-WM 开辟 sim2real 第四派
+- 2026-07-09 WM 进入"定义+罗盘"时代(SH AI Lab WMRoadmap + Alibaba DAMO RynnWorld-4D)、VLA foundation 数据军备升级(LingBot-VLA 2.0 60K 小时);必读 3 + 值得看 12 + 可跳过 12,笔记 1 篇(LingBotVLA2;RynnWorld-4D 和 WMRoadmap 单 agent 未覆盖)
+- 2026-07-10 Sim 基础设施代际更替周(EmbodiedGenV2+SPEAR)、触觉 FM 六部曲(TouchWorld)、test-time 学习浪潮(WAM-TTT 真机 Progress 46.2% vs π0.5 14.8%);必读 3 + 值得看 15 + 可跳过 11,笔记 1 篇(WAM-TTT;EmbodiedGenV2 和 TouchWorld 单 agent 未覆盖)
+- 2026-07-13 arXiv API 全天 timeout 仅 HF trending 撑场(必读 1 值得看 1 可跳过 2);RoboDojo 六校联署 sim+real benchmark,SOTA VLA 真机成功率仅 12.8% vs 人类 100%;笔记 1 篇(RoboDojo)
+- 2026-07-14 三任务(NVIDIA/具身/论文)全因"out of extra usage"配额耗尽失败,配额 8:30am 重置
+- 2026-07-15 NVIDIA 07:00 成功(513s),但 07:15 论文任务再次因配额耗尽失败;首次出现 NVIDIA 任务成功后配额仍不足以支撑论文流水线的情况
 - Zotero 同步配置位于 ~/.claude/skills/_shared/user-config.local.json 的 zotero_sync 段,默认 enabled=false,tier="必读",tags 默认 `daily-papers`
 - Zotero collections 白名单:World Model / Robot Policy / Humanoid / Navigation / Reinforcement Learning / SceneGraph / SpatialVerse / InstanceSegmentation / Dataset
-- Zotero 同步按 arXiv id 查重,已入库跳过
-- 未同步到 Zotero 的必读积压(截至 2026-07-13 约 25+ 篇):HallucinationWM / IDEA / HumanoidDART / PhysiFormer / AgileFlightGen / SynPriorS2R / QwenRobotManip / DVGWM / 3DPointWM / Valdi / PVWM / PhysMani / WorldSample / ACID / Cosmos3 / VLA-Corrector / TacImag / GigaWorld-1 / Mask2Real-WM / MultiplayerWM / LingBotVLA2 / RynnWorld-4D / WMRoadmap / WAM-TTT / EmbodiedGenV2 / TouchWorld / RoboDojo
-- 论文推荐单 agent 分发覆盖不全曾连续四日(07-07 至 07-10 均仅 1/3 覆盖);07-13 必读仅 1 篇故天然全覆盖,分发瓶颈仅在必读 ≥2 篇时暴露
+- 未同步到 Zotero 的必读积压(截至 2026-07-15 约 27+ 篇,含有 Obsidian 笔记但 Zotero 未入库):HallucinationWM / IDEA / HumanoidDART / PhysiFormer / AgileFlightGen / SynPriorS2R / QwenRobotManip / DVGWM / 3DPointWM / Valdi / PVWM / PhysMani / WorldSample / ACID / Cosmos3 / VLA-Corrector / TacImag / GigaWorld-1 / Mask2Real-WM / MultiplayerWM / LingBotVLA2 / RynnWorld-4D / WMRoadmap / WAM-TTT / EmbodiedGenV2 / TouchWorld / RoboDojo
+- 论文推荐单 agent 分发覆盖不全已连续五日(07-07 至 07-10 均仅 1/3 覆盖;07-13 必读仅 1 篇天然全覆盖);必读 ≥2 篇时分发瓶颈持续暴露
 
 ## 注意事项
 - 配图严格 1 张,绝不发第 2 张(必触发节流锁死)
@@ -71,11 +71,10 @@
 - 论文日期硬校验:超 14 天的旧论文不能放进头条/deep dive,只能进"延伸阅读"并标注真实日期
 - 搜不到 14 天内新论文时,宁可彻底放弃论文项,绝不把老论文包装成"今日新发"
 - 2026-06-22 NVIDIA 与论文任务均因 401 认证失败未完成,2026-06-23 起已恢复正常
-- 2026-07-14 首次出现配额耗尽("out of extra usage")导致三任务全失败,需留意 07:00-07:15 触发窗口撞上配额重置(8:30am)的风险,失败日可主动提议补跑
-- 2026-06-24 论文流水线收尾报告退化为"SkyJEPA done. Waiting on Foresight."(违反一句话报告规范,需避免在笔记仍在生成时提前回复);2026-06-25 之后已稳定标准格式
-- 当日推荐被前日重推稀释或上游源故障时(如 06-30 必读仅 2 篇、07-01 必读 0 篇、07-13 arXiv API timeout 仅 4 篇),需在一句话报告中点明原因
+- 2026-07-14 首次出现配额耗尽导致三任务全失败;2026-07-15 再次出现论文任务配额耗尽(即便 NVIDIA 成功后),说明 07:00-07:15 三任务串联配额风险较高,失败日应主动提议补跑
+- 配额耗尽模式:07:00 NVIDIA 消耗配额 → 07:15 论文任务可能撞上配额边界(07-15 已证实);三任务窗口内配额不稳定
+- 2026-06-24 论文流水线收尾报告退化为"SkyJEPA done. Waiting on Foresight."(违反一句话报告规范);2026-06-25 之后已稳定标准格式
 - Zotero 同步默认关闭,除非用户明确开启或说"顺手也同步到 Zotero",cron 不主动跑该步
 - 开启 Zotero 同步前需确认客户端在跑(`curl 127.0.0.1:23119/connector/ping`)
-- 用户两次追问 Zotero 沉淀现状(2026-07-06 连问两次:"有自动沉淀吗"、"有一个 skill 只加关键文章对吗"),已获知默认关闭机制、tier 过滤、配置路径与补跑选项,但尚未表态开启;后续若提"顺手同步"或"补跑"即执行
-- 单 agent 分发必读笔记时若存在覆盖不全,需在一句话报告中显式说明未覆盖的论文名;07-07 至 07-10 连续四日仅 1/3 覆盖已成固定模式,必读 ≥2 篇时分发策略亟需调整(如按必读篇数拆多 agent 或串行补跑)
-- 舞蹈视频项目方向("科目一"整舞)截至 2026-07-14 尚未获用户确认,勿在未对齐前擅自开工
+- 单 agent 分发必读笔记时若存在覆盖不全,需在一句话报告中显式说明未覆盖的论文名;必读 ≥2 篇时分发策略亟需调整(如按必读篇数拆多 agent 或串行补跑)
+- 舞蹈视频项目("科目一"整舞,类似科目三的 viral 舞蹈梗)截至 2026-07-14 尚未获用户确认方向,勿在未对齐前擅自开工
