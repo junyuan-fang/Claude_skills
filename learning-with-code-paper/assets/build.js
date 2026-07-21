@@ -24,7 +24,8 @@ const PAGES = [
   { id: "theory-0", url: "theory-0.html", src: "theory/00-零基础白话导读.md",
     title: "理论 0 · 零基础白话导读", navLabel: "00 · 零基础白话导读", group: "theory" },
   { id: "theory-1", url: "theory-1.html", src: "theory/01-四元数与位姿误差.md",
-    title: "理论 1 · 四元数与位姿误差", navLabel: "四元数与位姿误差", group: "theory" },
+    title: "理论 1 · 四元数与位姿误差", navLabel: "四元数与位姿误差", group: "theory",
+    extraScripts: ["viz-theory1.js"] },
   { id: "theory-2", url: "theory-2.html", src: "theory/02-数值优化-从梯度下降到LBFGS和LM.md",
     title: "理论 2 · 数值优化：GD → L-BFGS → LM", navLabel: "数值优化 GD→LBFGS→LM", group: "theory" },
   { id: "theory-3", url: "theory-3.html", src: "theory/03-线搜索-Armijo与Wolfe.md",
@@ -737,8 +738,56 @@ ${toc}
 })();
 </script>
 <script src="app.js"></script>
+${(page.extraScripts || []).map((s) => `<script src="${s}" defer></script>`).join("\n")}
 </body>
 </html>`;
+}
+
+/* ---------- theory-1 visualization containers ------------------------------
+   Spliced into the rendered HTML at stable anchor substrings (see the md's
+   headings). Kept out of the markdown source since these are page-specific
+   interactive widgets, not prose content. */
+const THEORY1_VIZ = {
+  rotate: `<div class="viz-card" id="viz-rotate">
+  <div class="viz-card-head">
+    <span class="viz-card-title">拖一拖:两个旋转差多少</span>
+    <button type="button" class="viz-btn" data-viz-action="flip">翻转 q → −q</button>
+    <button type="button" class="viz-btn" data-viz-action="reset">复位</button>
+  </div>
+  <canvas class="viz-canvas" aria-label="四元数旋转拖拽演示"></canvas>
+  <div class="viz-readout">
+    <span>当前 <var>q</var> = (<span data-viz-q>1.000, 0.000, 0.000, 0.000</span>)</span>
+    <span>内积 <var>q·q</var><sub>target</sub> = <span data-viz-dot>0.000</span></span>
+    <span>测地距离 <var>d</var> = <span data-viz-dist>0.0°</span></span>
+  </div>
+  <p class="viz-hint">拖动实线坐标系旋转,对齐虚线目标坐标系——距离趋于 0。点"翻转"把 <var>q</var> 变成 <var>−q</var>:图形纹丝不动,距离数字也不变,这就是双覆盖。</p>
+</div>`,
+  arccos: `<div class="viz-card" id="viz-arccos">
+  <div class="viz-card-title">拖一拖:arccos 在收敛处为什么会"爆炸"</div>
+  <canvas class="viz-chart" aria-label="arccos 函数与切线斜率演示"></canvas>
+  <div class="viz-slope" data-viz-slope>x = 0.70  斜率 arccos'(x) = −1.40</div>
+  <p class="viz-hint">拖动曲线上的圆点,看切线斜率(= 导数)在 <var>x</var> 逼近 ±1 时如何迅速变陡趋于 −∞。</p>
+</div>`,
+  logcosh: `<div class="viz-card" id="viz-logcosh">
+  <div class="viz-card-title">log cosh(x) 对比 x²/2 与 |x|</div>
+  <canvas class="viz-chart" aria-label="log cosh 与参考曲线对比图"></canvas>
+  <p class="viz-hint">阴影区是 |x| ≤ 1(近处);移动鼠标查看任意一点三条曲线的取值。</p>
+</div>`
+};
+function injectTheory1Viz(html) {
+  html = html.replace(
+    '<div class="math-block">$$d(q_1, q_2) = 2\\arccos\\big(|\\,q_1^\\top q_2\\,|\\big).$$</div>',
+    (m) => m + "\n" + THEORY1_VIZ.rotate
+  );
+  html = html.replace(
+    "保证目标方向的两个等价四元数都被当作零误差。</p></div>",
+    (m) => m + "\n" + THEORY1_VIZ.arccos
+  );
+  html = html.replace(
+    "梯度<strong>有界</strong>,不会爆炸</li></ul>",
+    (m) => m + "\n" + THEORY1_VIZ.logcosh
+  );
+  return html;
 }
 
 /* ---------- index page ---------------------------------------------------- */
@@ -954,6 +1003,7 @@ PAGES.forEach((page) => {
   // page H1 title from first heading
   const h1 = (md.match(/^#\s+(.*)$/m) || [])[1] || page.title;
   const parsed = parseMarkdown(md, page);
+  if (page.id === "theory-1") parsed.html = injectTheory1Viz(parsed.html);
   const bc =
     page.group === "stage"
       ? "学习阶段"
