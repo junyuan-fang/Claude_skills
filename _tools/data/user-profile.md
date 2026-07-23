@@ -16,12 +16,13 @@
 ## 近期项目
 - 每日 NVIDIA 新闻推送(v3.1 静默深度版):归档 + 头条快报 + 深度展开 + 1 张配图三段式,归档到 `~/code/claude_bot/news_archive/nvidia-YYYY-MM-DD.md`
 - 每日具身智能新闻推送(v1.3):行业+论文混编,论文强制 14 天窗口(HF daily 优先+arXiv abstract 精校),归档每篇必带 `- Project: <url>` 供下游 awesome-physical-ai ingest
-- daily-papers 三步流水线(fetch→review→notes):日更 Obsidian 论文笔记与目录页,概念库/论文库分别索引(近期已到 657 概念 / 70 论文)
-- 3D 点云分割实验:Xiaomi-Robotics-1、DriftWorld、FastWAM、GigaWorldPolicy、Orca、FlowWAM 等模型跟进
+- daily-papers 三步流水线(fetch→review→notes):日更 Obsidian 论文笔记与目录页,概念库/论文库分别索引(2026-07-23 已到 695 概念 / 72 论文)
+- 3D 点云分割实验:Xiaomi-Robotics-1、DriftWorld、FastWAM、GigaWorldPolicy、AlayaWorld、MVA、Orca、FlowWAM 等模型跟进
+- 论文笔记支持复用:同一论文多日出现时复用已有笔记(如 Xiaomi-Robotics-1),不重复生成
 
 ## 沟通习惯
 - 用超长结构化 prompt 指定完整流程:Step 1-5 + 【绝对禁止】清单,细化到 sleep 秒数、字符上限、发送顺序
-- 通过飞书 open_id 触发 cron/手动任务(ou_90d9f956...)
+- 通过飞书 open_id 触发 cron/手动任务(ou_90d9f956...),固定日程:07:00 NVIDIA、07:15 论文推荐、~07:45/15:44 具身新闻
 - 中文为主,技术术语混用英文
 - 反复强调"绝对禁止"事项,说明曾被违反过
 
@@ -40,4 +41,5 @@
 - 具身论文归档每篇必带 `- Project: <url>` 行(项目主页 > GitHub > demo,找不到写 N/A),下游自动 ingest 依赖
 - RTX 5090 NVIDIA 显示引擎易 wedge,只有完整 reboot 能清;GUI 走 TurboVNC+Xfce 端口 5903
 - Claude 工作产物统一放 `~/code/claude_bot/` 下管理
-- 2026-07-22 起 OAuth token 曾被撤销,导致 NVIDIA 与具身推送连续失败,需注意认证状态
+- 2026-07-22 OAuth token 被撤销导致全天三个定时任务(NVIDIA/论文/具身)全部 401 失败,2026-07-23 已恢复;需关注认证状态
+- 2026-07-23 出现任务响应错位(NVIDIA prompt 收到论文推荐的回复),且流水线耗时可达 2760 秒;定时任务执行结果需事后核对
