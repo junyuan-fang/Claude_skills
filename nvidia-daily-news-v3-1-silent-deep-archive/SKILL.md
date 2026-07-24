@@ -1,10 +1,10 @@
 ---
 name: nvidia-daily-news-v3-1-silent-deep-archive
-description: 每日通过 cc-send-safe 推送 NVIDIA 24 小时重要新闻：先写完整深度归档，再分头条快报+深度展开+1 张配图三段式推送，每段间隔 30s，全程静默不发状态消息，规避 ret=-2 节流
-trigger_keywords: ["NVIDIA 每日新闻", "英伟达推送", "英伟达新闻推送", "英伟达新闻摘要", "nvidia daily", "nvidia daily news", "nvidia 新闻 cron", "NVIDIA 新闻", "每日 NVIDIA", "深度版新闻推送"]
+description: 每日搜索 NVIDIA 24 小时重要新闻，写完整深度归档后按头条快报+深度展开+1 张配图三段式经 cc-send-safe 推送，每段间隔 30s，全程静默不发任何中间/收尾状态消息，规避 ret=-2 节流
+trigger_keywords: ["NVIDIA 每日新闻", "英伟达推送", "英伟达新闻推送", "英伟达新闻摘要", "英伟达日报", "nvidia daily", "nvidia daily news", "nvidia 新闻 cron", "NVIDIA 新闻", "每日 NVIDIA", "深度版新闻推送"]
 source: date=2026-06-24
-version: 3.2
-updated_at: 2026-07-11T00:00:00
+version: 4.3
+updated_at: 2026-07-25T00:00:00
 ---
 
 # NVIDIA 每日新闻深度推送 v3.1（静默+归档+双段+单图）
