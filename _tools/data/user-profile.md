@@ -6,19 +6,20 @@
 - 内容深度优先：每条新闻要做"尽调式扩展",能让不熟领域的人 30 秒抓住 why-it-matters,而非罗列关键词
 - 数字化表达:偏好"x 倍/y 万/z 亿"具体数字,不喜欢并列符堆词
 - 已熟概念不要再解释(VLA/WAM/VLM/Sim2Real/Diffusion Policy/Imitation Learning/RL 等),只解释真正冷门/新生术语
+- 概念是否需要解释的判定标准:谷歌一搜有 Wikipedia 条目的概念一律不解释
 
 ## 技术栈与角色
 - 具身智能 / 3D 视觉 / 点云分割方向研究者,深度使用 Pointcept、Volt、SPFormer
 - 机器 GPU 为 RTX 5090(cu128),常运行训练/推理任务
-- 日常工具链:Obsidian 笔记库(DailyPapers)、Claude Code 多 skill 流水线、cc-connect 微信推送通道、arXiv/HuggingFace papers
+- 日常工具链:Obsidian 笔记库(DailyPapers)、Claude Code 多 skill 流水线、cc-connect 微信推送通道、飞书触发、arXiv/HuggingFace papers
 - 熟悉学术论文写作规范与 arXiv ID 编码(YYMM 前缀)
 
 ## 近期项目
 - 每日 NVIDIA 新闻推送(v3.1 静默深度版):归档 + 头条快报 + 深度展开 + 1 张配图三段式,归档到 `~/code/claude_bot/news_archive/nvidia-YYYY-MM-DD.md`
 - 每日具身智能新闻推送(v1.3):行业+论文混编,论文强制 14 天窗口(HF daily 优先+arXiv abstract 精校),归档每篇必带 `- Project: <url>` 供下游 awesome-physical-ai ingest
 - daily-papers 三步流水线(fetch→review→notes):日更 Obsidian 论文笔记与目录页,概念库/论文库分别索引(2026-07-24 已到 712 概念 / 74 论文)
-- 3D 点云分割实验:Xiaomi-Robotics-1、DriftWorld、FastWAM、GigaWorldPolicy、AlayaWorld、MVA、ABot-World-0、HOST、Orca、FlowWAM 等模型跟进
-- 论文笔记支持复用:同一论文多日再推时复用已有笔记(如 Xiaomi-Robotics-1、AlayaWorld、MVA),不重复生成
+- 3D 点云分割与具身模型跟进:Xiaomi-Robotics-1、DriftWorld、FastWAM、GigaWorldPolicy、AlayaWorld、MVA、ABot-World-0、HOST、Orca、FlowWAM 等
+- 论文笔记支持复用:同一论文多日再推时复用已有笔记(Xiaomi-Robotics-1、AlayaWorld、MVA 均已多次复用),不重复生成
 
 ## 沟通习惯
 - 用超长结构化 prompt 指定完整流程:Step 1-5 + 【绝对禁止】清单,细化到 sleep 秒数、字符上限、发送顺序
@@ -42,4 +43,4 @@
 - RTX 5090 NVIDIA 显示引擎易 wedge,只有完整 reboot 能清;GUI 走 TurboVNC+Xfce 端口 5903
 - Claude 工作产物统一放 `~/code/claude_bot/` 下管理
 - 2026-07-22 OAuth token 被撤销导致全天三个定时任务(NVIDIA/论文/具身)全部 401 失败,2026-07-23 已恢复;需关注认证状态
-- 定时任务执行结果需事后核对:曾出现响应错位(2026-07-23 NVIDIA prompt 收到论文推荐回复)和空响应(2026-07-24 NVIDIA 任务),流水线耗时可达 2760 秒
+- 定时任务执行结果需事后核对:多次出现响应错位(2026-07-23 NVIDIA prompt 收到论文推荐回复)、空响应(2026-07-24 NVIDIA)、只回响应时间无内容摘要(2026-07-24 具身);流水线耗时可达 2760 秒
