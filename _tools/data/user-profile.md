@@ -17,10 +17,10 @@
 ## 近期项目
 - 每日 NVIDIA 新闻推送(v3.1 静默深度版):归档 + 头条快报 + 深度展开 + 1 张配图三段式,归档到 `~/code/claude_bot/news_archive/nvidia-YYYY-MM-DD.md`
 - 每日具身智能新闻推送(v1.3):行业+论文混编,论文强制 14 天窗口(HF daily 优先+arXiv abstract 精校),归档每篇必带 `- Project: <url>` 供下游 awesome-physical-ai ingest
-- daily-papers 三步流水线(fetch→review→notes):日更 Obsidian 论文笔记与目录页,概念/论文库持续增长(2026-07-21 为 657/70,2026-07-27 已到 724 概念 / 75 论文)
+- daily-papers 三步流水线(fetch→review→notes):日更 Obsidian 论文笔记与目录页,概念/论文库持续增长(2026-07-21 为 657/70,2026-07-23 为 695/72,2026-07-24 为 712/74,2026-07-27 为 724/75)
 - 3D 点云分割与具身模型跟进:Xiaomi-Robotics-1、DriftWorld、FastWAM、GigaWorldPolicy、AlayaWorld、MVA、ABot-World-0、HOST、Orca、FlowWAM、Kairos 等
 - 论文笔记支持复用:同一论文多日再推时复用已有笔记(Xiaomi-Robotics-1、AlayaWorld、MVA 均已多次复用),不重复生成
-- 必读笔记通常每日 2 篇、400-520 行/篇;周末新论文少时可降为 1 篇但更长(Kairos 811 行)
+- 必读笔记通常每日 2 篇、400-520 行/篇(如 ABot-World-0 437 行、HOST 502 行、AlayaWorld 518 行、MVA 400 行);周末新论文少时可降为 1 篇但更长(Kairos 811 行)
 - 周末档降级策略:arXiv 宕机时用 HF Trending 兜底,再推占比高(2026-07-27 为 11 篇中 8 篇再推)
 
 ## 沟通习惯
@@ -46,6 +46,6 @@
 - RTX 5090 NVIDIA 显示引擎易 wedge,只有完整 reboot 能清;GUI 走 TurboVNC+Xfce 端口 5903
 - Claude 工作产物统一放 `~/code/claude_bot/` 下管理
 - 2026-07-22 OAuth token 被撤销导致全天三个定时任务(NVIDIA/论文/具身)全部 401 失败,2026-07-23 已恢复;需关注认证状态
-- 定时任务执行结果需事后核对:多次出现响应错位(2026-07-23 NVIDIA prompt 收到论文推荐回复)、空响应(2026-07-24 NVIDIA)、只回响应时间无内容摘要(2026-07-21/24/27 具身、2026-07-27 NVIDIA)
+- 定时任务执行结果需事后核对:多次出现响应错位(2026-07-23 NVIDIA prompt 收到论文推荐回复)、空响应(2026-07-24 NVIDIA)、只回响应时间无内容摘要(2026-07-21/24/27/28 具身、2026-07-27/28 NVIDIA)
 - 流水线耗时波动大(78 秒~2760 秒),超长耗时可能与响应异常相关,长时间无回复不代表失败
-- 新闻类任务只回"响应时间 X 秒"无摘要的情况在增多,需核对归档文件与实际推送确认是否真正执行
+- 新闻类任务只回"响应时间 X 秒"无摘要的情况占比越来越高(2026-07-27/28 NVIDIA 与具身两档均只回时间),需人工核对归档文件与实际推送是否真正执行
