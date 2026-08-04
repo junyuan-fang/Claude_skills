@@ -17,12 +17,12 @@
 ## 近期项目
 - 每日 NVIDIA 新闻推送(v3.1 静默深度版):归档 + 头条快报 + 深度展开 + 1 张配图三段式,归档到 `~/code/claude_bot/news_archive/nvidia-YYYY-MM-DD.md`
 - 每日具身智能新闻推送(v1.3):行业+论文混编,论文强制 14 天窗口(HF daily 优先+arXiv abstract 精校),归档每篇必带 `- Project: <url>` 供下游 awesome-physical-ai ingest
-- daily-papers 三步流水线(fetch→review→notes):日更 Obsidian 论文笔记与目录页,概念/论文库持续增长(2026-07-27 为 724/75,2026-07-29 为 763/77,2026-07-30 为 798/79,2026-07-31 为 813/81)
-- 3D 点云分割与具身模型跟进:Xiaomi-Robotics-1、DriftWorld、FastWAM、GigaWorldPolicy、AlayaWorld、MVA、ABot-World-0、HOST、Orca、FlowWAM、Kairos、DataPyramid、FeelWorld、HiFi-UMI、DC-WAM、πR²、TurboVLA、CheckVLA 等
+- daily-papers 三步流水线(fetch→review→notes):日更 Obsidian 论文笔记与目录页,概念/论文库持续增长(2026-07-29 为 763/77,2026-07-30 为 798/79,2026-07-31 为 813/81,2026-08-04 为 846/83)
+- 3D 点云分割与具身模型跟进:Xiaomi-Robotics-1、DriftWorld、FastWAM、GigaWorldPolicy、AlayaWorld、MVA、ABot-World-0、HOST、Orca、FlowWAM、Kairos、DataPyramid、FeelWorld、HiFi-UMI、DC-WAM、πR²、TurboVLA、CheckVLA、Auto-JEPA、WCM 等
 - 论文笔记支持复用:同一论文多日再推时复用已有笔记(Xiaomi-Robotics-1、AlayaWorld、MVA、DataPyramid、ABot-World-0、πR² 均已多次复用),不重复生成
-- 必读笔记通常每日 2 篇、350-590 行/篇(如 ABot-World-0 437 行、HOST 502 行、AlayaWorld 518 行、MVA 400 行、DataPyramid 357 行、FeelWorld 482 行、HiFi-UMI 559 行、DC-WAM 516 行、TurboVLA 490 行、CheckVLA 584 行);周末新论文少时可降为 1 篇但更长(Kairos 811 行)
-- 周末档降级策略:arXiv 宕机时用 HF Trending 兜底,再推占比高(2026-07-27 为 11 篇中 8 篇再推)
-- 非 embodied 论文(如 KimiK3)或涉及数据集协议内容(如 CG-World)即使入选推荐也可不生成笔记
+- 必读笔记通常每日 2 篇、350-680 行/篇(如 DataPyramid 357 行、FeelWorld 482 行、HiFi-UMI 559 行、DC-WAM 516 行、TurboVLA 490 行、CheckVLA 584 行、Auto-JEPA 677 行、WCM 553 行);周末新论文少时可降为 1 篇但更长(Kairos 811 行)
+- 周末档降级策略:arXiv 宕机时用 HF Trending 兜底,再推占比高
+- 非 embodied 论文(如 KimiK3)、涉及数据集协议内容(如 CG-World)、或摘要信息不足的论文(如 ACE-Data-0)即使入选推荐也可不生成笔记
 
 ## 沟通习惯
 - 用超长结构化 prompt 指定完整流程:Step 1-5 + 【绝对禁止】清单,细化到 sleep 秒数、字符上限、发送顺序
@@ -33,7 +33,7 @@
 
 ## 已知事实
 - 用户已熟知概念清单(不要再解释):VLA、WAM、VLM、Sim2Real、Teleoperation、Diffusion Policy、Imitation Learning、RL、Behavior Cloning、Foundation Model、Whole-body Control、ZMP、MPC、CMA-ES、四足、humanoid、灵巧手、locomotion
-- 关注公司:宇树、智元、银河通用、星海图、星动纪元、Figure、1X、Apptronik、Agility、Boston Dynamics、Tesla Optimus、小鹏 IRON、UBTech、星尘智能、自变量、Simple AI、华为、HUST
+- 关注公司:宇树、智元、银河通用、星海图、星动纪元、Figure、1X、Apptronik、Agility、Boston Dynamics、Tesla Optimus、小鹏 IRON、UBTech、星尘智能、自变量、Simple AI、华为、HUST、同济、复旦
 - 关注科研机构:CASIA、BAAI、SJTU、清华、密歇根等国内外高校/实验室的具身与世界模型工作
 - 邮箱:fangjunyuan1@gmail.com
 - 机器 IP 10.10.30.49(内网),配置有 Qunhe VPN(NetworkManager `qunheVPN-k8s-xs`,`vpn up/down/status` 脚本)
@@ -48,7 +48,7 @@
 - RTX 5090 NVIDIA 显示引擎易 wedge,只有完整 reboot 能清;GUI 走 TurboVNC+Xfce 端口 5903
 - Claude 工作产物统一放 `~/code/claude_bot/` 下管理
 - 2026-07-22 OAuth token 被撤销导致全天三个定时任务(NVIDIA/论文/具身)全部 401 失败,2026-07-23 已恢复;需关注认证状态
-- 定时任务执行结果需事后核对:多次出现响应错位(2026-07-23 NVIDIA prompt 收到论文推荐回复)、空响应(2026-07-24 NVIDIA)、只回响应时间无内容摘要(2026-07-21/24/27/28/29/30/31 具身、2026-07-27/28/29/30/31 NVIDIA)
+- 定时任务执行结果需事后核对:多次出现响应错位、空响应、只回响应时间无内容摘要的情况
 - 流水线耗时波动大(78 秒~2760 秒),超长耗时可能与响应异常相关,长时间无回复不代表失败
-- 新闻类任务只回"响应时间 X 秒"无摘要的情况已成常态(2026-07-27~31 NVIDIA 与具身两档均只回时间),需人工核对归档文件与实际推送是否真正执行
-- 论文推荐流水线耗时稳定在 20-32 分钟(1200-1900 秒),会正常回一句话摘要,与新闻类只回时间的行为不同
+- 新闻类任务只回"响应时间 X 秒"无摘要的情况已成常态(2026-07-27~31、08-04 NVIDIA 与具身两档均只回时间),需人工核对归档文件与实际推送是否真正执行
+- 论文推荐流水线耗时稳定在 20-35 分钟(1400-2100 秒),会正常回一句话摘要,与新闻类只回时间的行为不同
