@@ -36,6 +36,7 @@
 - 关注公司:宇树、智元、银河通用、星海图、星动纪元、Figure、1X、Apptronik、Agility、Boston Dynamics、Tesla Optimus、小鹏 IRON、UBTech、星尘智能、自变量、Simple AI、华为、HUST、同济、复旦、人大、Qwen
 - 关注科研机构:CASIA、BAAI、SJTU、清华、密歇根、华为诺亚等国内外高校/实验室的具身与世界模型工作
 - 邮箱:fangjunyuan1@gmail.com
+- 时区为 Asia/Shanghai
 - 机器 IP 10.10.30.49(内网),配置有 Qunhe VPN(NetworkManager `qunheVPN-k8s-xs`,`vpn up/down/status` 脚本)
 - 使用 Qunhe DevOps MCP(`@qunhe/devops-mcp` + MOON_TOKEN)对接内网 cf.qunhequnhe.com Confluence
 
@@ -47,8 +48,9 @@
 - 具身论文归档每篇必带 `- Project: <url>` 行(项目主页 > GitHub > demo,找不到写 N/A),下游自动 ingest 依赖
 - RTX 5090 NVIDIA 显示引擎易 wedge,只有完整 reboot 能清;GUI 走 TurboVNC+Xfce 端口 5903
 - Claude 工作产物统一放 `~/code/claude_bot/` 下管理
-- 2026-07-22 OAuth token 被撤销导致全天三个定时任务全部 401 失败,2026-07-23 已恢复;2026-08-06 NVIDIA 与具身两档均报 API ConnectionRefused 失败(本地 API 连接被拒),且当日论文推荐档未见执行;需持续关注认证与 API 连通状态
+- 2026-07-22 OAuth token 撤销致全天任务 401(次日恢复);2026-08-06 三档全部失败(NVIDIA/具身报 API ConnectionRefused,论文档未见执行);需持续关注认证与 API 连通状态
+- 新失败模式:用量配额耗尽——2026-08-07 论文推荐与具身新闻两档均报"You've hit your limit · resets 8:30am",07:00-08:30 密集三连任务易撞额度上限,当日 NVIDIA 档(628 秒)是唯一成功档
 - 定时任务执行结果需事后核对:多次出现响应错位、空响应、只回响应时间无内容摘要的情况
 - 流水线耗时波动大(78 秒~2760 秒),超长耗时可能与响应异常相关,长时间无回复不代表失败
-- 新闻类任务只回"响应时间 X 秒"无摘要的情况已成常态(2026-07-27~08-05 NVIDIA 与具身两档均只回时间),需人工核对归档文件与实际推送是否真正执行
+- 新闻类任务只回"响应时间 X 秒"无摘要的情况已成常态(2026-07-27 起 NVIDIA 与具身两档均只回时间),需人工核对归档文件与实际推送是否真正执行
 - 论文推荐流水线耗时稳定在 20-35 分钟(1400-2100 秒),会正常回一句话摘要,与新闻类只回时间的行为不同
