@@ -20,9 +20,10 @@
 - 每日具身智能新闻推送(v1.3):行业+论文混编,论文强制 14 天窗口(HF daily 优先+arXiv abstract 精校),归档每篇必带 `- Project: <url>` 供下游 awesome-physical-ai ingest
 - daily-papers 三步流水线(fetch→review→notes):日更 Obsidian 论文笔记与目录页,概念/论文库持续增长(2026-07-31 为 813/81,2026-08-04 为 846/83,2026-08-05 为 877/85,2026-08-07 补跑后为 903/87)
 - 论文笔记已支持双 vault 同步
-- 3D 点云分割与具身模型跟进:Xiaomi-Robotics-1、DriftWorld、FastWAM、GigaWorldPolicy、AlayaWorld、MVA、ABot-World-0、HOST、Orca、FlowWAM、Kairos、DataPyramid、FeelWorld、HiFi-UMI、DC-WAM、πR²、TurboVLA、CheckVLA、Auto-JEPA、WCM、Faster-WAM、Ego2Robot、WorldCycle、BridgeVLA++ 等
+- 3D 点云分割与具身模型跟进:Xiaomi-Robotics-1、DriftWorld、FastWAM、GigaWorldPolicy、AlayaWorld、MVA、ABot-World-0、HOST、Orca、FlowWAM、Kairos、DataPyramid、FeelWorld、HiFi-UMI、DC-WAM、πR²、TurboVLA、CheckVLA、Auto-JEPA、WCM、Faster-WAM、Ego2Robot、WorldCycle、BridgeVLA++、WorldTrace 等
 - 论文笔记支持复用:同一论文多日再推时复用已有笔记(Xiaomi-Robotics-1、AlayaWorld、MVA、DataPyramid、ABot-World-0、πR² 均已多次复用),不重复生成
-- 必读笔记通常每日 2 篇、350-780 行/篇(如 Auto-JEPA 677 行、WCM 553 行、Faster-WAM 412 行、Ego2Robot 512 行、WorldCycle 471 行、BridgeVLA++ 780 行);周末新论文少时可降为 1 篇但更长(Kairos 811 行)
+- 必读笔记通常每日 2 篇、350-780 行/篇(如 Auto-JEPA 677 行、WCM 553 行、Faster-WAM 412 行、Ego2Robot 512 行、WorldCycle 471 行、BridgeVLA++ 780 行);单篇可长至 811-966 行(Kairos 811、WorldTrace 966)
+- 笔记生成可交由后台 agent 并行,主流程需回收其回报并做行数/完整性校验后才算收尾
 - 周末档降级策略:arXiv 宕机时用 HF Trending 兜底,再推占比高
 - 非 embodied 论文(如 KimiK3)、涉及数据集协议内容(如 CG-World)、摘要信息不足(如 ACE-Data-0)、或留待用户按需精读(如 DF³)的论文即使入选推荐也可不生成笔记
 - 因额度/API 故障漏跑的档次可在后续日期补跑(2026-08-10 补齐 8/7 论文流水线)
