@@ -1,10 +1,11 @@
 ---
 name: cc-send-safe-anti-throttle-protocol
-description: 通过 cc-connect / cc-send-safe 向微信推送多条消息或图片时，用于避免 ret=-2 节流锁死通道的固定发送节奏与禁忌。
-trigger_keywords: ["cc-send-safe", "cc-connect", "ret=-2", "节流", "微信推送 节流", "请稍后再试", "推送锁死", "微信推送"]
+title: cc-send-safe 微信推送防节流协议
+description: 通过 cc-connect / cc-send-safe 向微信连发多条消息或图片时，用于避免 ret=-2 节流锁死通道的固定发送节奏与禁忌。
+trigger_keywords: ["cc-send-safe", "cc-connect", "ret=-2", "节流", "微信推送 节流", "请稍后再试", "推送锁死", "微信推送", "发图片失败"]
 source: date=2026-08-12
-version: 2
-updated_at: 2026-08-15T00:00:00
+version: 3
+updated_at: 2026-08-18T00:00:00
 ---
 
 # cc-send-safe 微信推送防节流发送协议
@@ -31,15 +32,17 @@ cc-send-safe --image /tmp/<name>.jpg    # 一次性尝试
 
 ## 图片规则
 
-4. 一次任务只准备并发送 **1 张** 图片。第 3 张图片必触发节流锁死。
+4. 一次任务（每轮）只准备并发送 **1 张** 图片。第 3 张图片必触发节流锁死。
 5. 发送前先验证并压缩：
 
 ```bash
 file /tmp/<name>.jpg                     # 确认确实是图片而非 HTML 错误页
-convert /tmp/<name>.jpg -quality 70 -resize 1200x /tmp/<name>.jpg   # >100KB 时压到 ≤80KB
+convert /tmp/<name>.jpg -quality 80 -resize 1280x /tmp/<name>.jpg   # >100KB 时压到 ≤80KB
 ```
 
-6. 图片发送 **一次性，失败即放弃，绝不重试** —— 重试只会加深节流。
+   压到 80 质量 / 1280 宽仍 >80KB 时，再降到 `-quality 70 -resize 1200x`。
+
+6. 图片发送 **一次性，失败即放弃，绝不重试** —— 每次失败请求都会加深节流。
 7. 图片失败后 **不要再发任何文字**（包括「图片发送失败」这类说明），会触发节流升级。用户能从内容缺失自行判断，无需告知。
 
 ## 静默原则
