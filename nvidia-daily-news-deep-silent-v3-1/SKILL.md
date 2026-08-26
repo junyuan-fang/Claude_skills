@@ -1,19 +1,19 @@
 ---
 name: nvidia-daily-news-deep-silent-v3-1
-title: NVIDIA 每日新闻深度推送（静默三段式 v3.1）
-description: 每日搜索 NVIDIA 近 24 小时重要新闻，先写完整深度归档，再经 cc-send-safe 按「头条快报 + 深度展开 + 1 张配图」三段式静默推送，全程不发任何中间态/收尾状态消息，规避微信通道 ret=-2 节流
-trigger_keywords: ["NVIDIA 每日新闻", "英伟达新闻推送", "英伟达新闻摘要", "英伟达日报", "英伟达每日", "nvidia daily news", "nvidia daily", "NVIDIA 24h", "NVIDIA 新闻", "每日 NVIDIA", "每日 NVIDIA 摘要", "深度版新闻", "深度版新闻摘要", "深度版 v3.1", "静默推送 NVIDIA", "nvidia 深度版", "cc-send-safe 推送"]
-keywords: ["NVIDIA 新闻", "NVIDIA 每日新闻", "英伟达新闻推送", "英伟达日报", "英伟达每日", "nvidia daily news", "nvidia daily", "每日 NVIDIA 摘要", "深度版新闻摘要", "深度版 v3.1", "静默推送", "cc-send-safe 推送"]
+title: NVIDIA 每日新闻深度版静默推送（v3.1）
+description: 每天推送 NVIDIA 近 24 小时新闻摘要时使用：先写完整深度归档，再经 cc-send-safe 按「头条快报 + 深度展开 + 1 张配图」三段式静默推送到 cc-connect（微信/飞书）通道，全程不发任何中间态/收尾状态消息，规避微信通道 ret=-2 节流
+trigger_keywords: ["NVIDIA 每日新闻", "英伟达新闻推送", "英伟达新闻摘要", "英伟达日报", "英伟达每日", "英伟达每日新闻", "nvidia daily news", "nvidia daily", "NVIDIA 24h", "NVIDIA 新闻", "每日 NVIDIA", "每日 NVIDIA 摘要", "深度版新闻", "深度版新闻摘要", "深度版推送", "深度版 v3.1", "静默推送 NVIDIA", "nvidia 深度版", "cc-send-safe 推送"]
+keywords: ["NVIDIA 新闻", "NVIDIA 每日新闻", "英伟达新闻推送", "英伟达每日新闻", "英伟达日报", "英伟达每日", "nvidia daily news", "nvidia daily", "每日 NVIDIA 摘要", "深度版新闻摘要", "深度版推送", "深度版 v3.1", "静默推送", "cc-send-safe"]
 source: date=2026-06-30
-version: 9.8
-updated_at: 2026-08-22T00:00:00
+version: 10.9
+updated_at: 2026-08-27T00:00:00
 ---
 
 # NVIDIA 每日新闻深度版静默推送 v3.1
 
 ## 适用场景
 
-每日（通常由 cron 触发）推送 NVIDIA 近 24 小时重要新闻到微信/飞书通道。
+每日（通常由 cron 触发）推送 NVIDIA 近 24 小时重要新闻到 cc-connect 的微信/飞书通道。
 
 ## 目标
 
@@ -22,7 +22,7 @@ updated_at: 2026-08-22T00:00:00
 ## Step 1: 搜索 + 撰写归档
 
 1. 搜 NVIDIA 最近 24 小时重要新闻（新品 / 合作 / 技术 / 财报 / 股价 / 地缘），优先信源：`nvidianews.nvidia.com`、`blogs.nvidia.com`、Bloomberg、CNBC、Stocktitan、TechCrunch。
-2. 每条新闻做**尽调式扩展**，标准是「让不熟该领域的人 30 秒掌握 why-it-matters」，每条至少覆盖以下 4 类中的 2 项（能全覆盖更好）：
+2. 每条新闻做**尽调式扩展**，标准是「让一个不熟该领域的人 30 秒掌握 why-it-matters」，每条至少覆盖以下 4 类中的 2 项（能全覆盖更好）：
    - **公司/产品背景 1 句**：例如「IREN 是澳洲挖矿转型 AI 算力的数据中心运营商，市值约 X」「Corning 即康宁，光纤玻璃供应商，主营特种玻璃和光纤」「GR00T 是 NVIDIA 通用人形机器人基础模型系列」
    - **技术细节**：模型参数量、训练数据规模/来源、benchmark 数字、推理延迟、对标 SOTA；硬件平台（GB300 / Rubin / Blackwell / DGX Spark）；网络与光互连规格
    - **数据/财务指标**：合作金额、产能（GW / 产线 / 倍数）、新增岗位、ROI、目标价升降幅度、股价反应
