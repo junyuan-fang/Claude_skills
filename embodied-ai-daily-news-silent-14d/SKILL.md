@@ -1,12 +1,12 @@
 ---
 name: embodied-ai-daily-news-silent-14d
 title: 每日具身智能新闻静默推送（v1.3，论文 14 天硬校验）
-description: 每日推送具身智能行业动态 + 重点论文混编摘要：三段式静默推送，论文必须 14 天内（HF daily 优先 + arXiv ID YYMM 粗筛 + abstract 页 submission date 精校），跳过用户已熟概念解释，归档每篇论文必带 Project 行供下游 awesome-physical-ai ingest
-keywords: ['具身智能 新闻', 'embodied AI 每日', '人形机器人 推送', 'VLA 论文推送', 'embodied 归档', 'cc-send-safe']
+description: 每日推送具身智能行业动态 + 新论文混编摘要：三段式静默推送，论文必须严格 14 天内（HF daily 优先 + arXiv ID YYMM 粗筛 + abstract 页 submission date 精校），跳过用户已熟概念解释，归档每篇论文必带 Project 行供下游 awesome-physical-ai ingest
+keywords: ['具身智能 新闻', '具身智能新闻', 'embodied AI 每日', 'embodied AI 日报', '人形机器人 推送', '人形机器人新闻', 'physical AI 推送', '每日具身智能', 'VLA 论文推送', 'embodied 归档', 'cc-send-safe']
 trigger_keywords: ["具身智能新闻", "具身智能日报", "embodied AI daily", "embodied AI 日报", "人形机器人新闻", "深度版 v1.3"]
 source: date=2026-08-07
-version: 3
-updated_at: 2026-08-18T00:00:00
+version: 4
+updated_at: 2026-09-01T00:00:00
 ---
 
 # 具身智能每日摘要（静默 + 论文 14 天硬校验 + Project 行）
@@ -23,7 +23,7 @@ updated_at: 2026-08-18T00:00:00
    - **行业**：融资（轮次、估值、领投）、量产（出货、交付、产线）、政策（中美欧、地方产业园补贴）、合作（车企/工厂/物流落地）、人事（高管流动、明星创业）。
      - 信源：36氪、晚点、IT 之家、TechCrunch、The Information、雷锋网、机器之心、量子位、新智元。
      - 重点公司：宇树、智元、银河通用、星海图、星动纪元、自变量、星尘智能、UBTech、Figure、1X、Apptronik、Agility、Boston Dynamics、Tesla Optimus、小鹏 IRON。
-   - **论文**：arXiv cs.RO / cs.AI / cs.CV、HuggingFace daily papers（首选，每日 curated）、CoRL / RSS / ICRA / NeurIPS / ICLR。主题：VLA / WAM / 世界模型 / Diffusion Policy / RL for robotics / Sim2Real / dexterous manipulation / locomotion / teleoperation。
+   - **论文**（按信源优先级）：HuggingFace daily papers（首选，每日 curated）> arXiv cs.RO / cs.AI / cs.CV > CoRL / RSS / ICRA / NeurIPS / ICLR。主题：VLA / WAM / 世界模型 / Diffusion Policy / RL for robotics / Sim2Real / dexterous manipulation / locomotion / teleoperation。
 
 2. **【论文日期硬校验 — 14 天窗口】** 只引用最近 14 天内提交的论文作为「今日论文」，按以下优先级核验：
    - a) HuggingFace daily papers (https://huggingface.co/papers) 当周精选 —— **最优先**，因为是每日 curated。
@@ -34,7 +34,7 @@ updated_at: 2026-08-18T00:00:00
 
 3. 每条做尽调式扩展（让读者 30 秒掌握 why-it-matters）：
    - **公司/产品背景（必含 1 句）**：公司是谁、做什么、谁创立、什么估值/规模。
-   - **概念解释严格 gating**：用户已熟以下概念，**禁止再解释** —— VLA、WAM、VLM、Sim2Real、Teleoperation、Diffusion Policy、Imitation Learning、RL、Behavior Cloning、Foundation Model、Whole-body Control、ZMP、MPC、CMA-ES、四足、人形 humanoid、灵巧手、locomotion。只在出现真正新生/小众术语（新论文内部命名如 "DreamZero"、"Helix"，新 method / dataset / 冷门 benchmark 名如 "RoboArena"）时 1 句带过。判定标准：谷歌一搜就有维基条目的概念，一律不解释。
+   - **概念解释严格 gating**：用户已熟以下概念，**禁止再解释** —— VLA、WAM、VLM、Sim2Real、Teleoperation、Diffusion Policy、Imitation Learning、RL、Behavior Cloning、Foundation Model、Whole-body Control、ZMP、MPC、CMA-ES、四足、人形 humanoid、灵巧手 dexterous manipulation、locomotion。只在出现真正新生/小众术语（新论文内部命名如 "DreamZero"、"Helix"、"GR00T-Mimic"，新 method / dataset / 冷门 benchmark 名如 "RoboArena"）时 1 句带过。判定标准：谷歌一搜就有 Wikipedia 条目的概念，一律不解释。
    - **数字**：融资金额、估值、产能、出货量、参数量、训练数据小时数、benchmark 分数。
    - **业内意义**：国内 vs 美国节奏、技术路线之争、谁吃到红利。
 
@@ -73,7 +73,7 @@ cc-send-safe --image /tmp/embodied_daily.jpg   # 一次性，失败即放弃，�
 ### Step 5: 静默收尾
 
 11. 不发任何 reply / 状态消息。
-12. 本地确认归档：
+12. 本地确认归档（仅 stdout，不推送）：
     ```bash
     ls -la /home/xinmiao/code/claude_bot/news_archive/ | tail -5
     ```
