@@ -1,19 +1,19 @@
 ---
 name: nvidia-daily-news-deep-silent-v3-1
-title: NVIDIA 每日新闻深度推送（v3.1 静默三段式）
-description: 每日推送 NVIDIA 近 24 小时新闻时使用：先写完整深度归档，再按「头条快报 + 深度展开 + 1 张配图」经 cc-send-safe 静默推送到 cc-connect（微信/飞书）通道，全程不发任何中间态/收尾状态消息，规避微信通道 ret=-2 节流。
-trigger_keywords: ["NVIDIA 每日新闻", "英伟达新闻推送", "英伟达新闻摘要", "英伟达日报", "英伟达每日", "英伟达每日新闻", "nvidia daily news", "nvidia daily", "NVIDIA 24h", "NVIDIA 新闻", "每日 NVIDIA", "每日 NVIDIA 摘要", "深度版新闻", "深度版新闻摘要", "深度版推送", "深度版 v3.1", "静默推送 NVIDIA", "nvidia 深度版", "cc-send-safe 推送"]
-keywords: ["NVIDIA 新闻", "NVIDIA 每日新闻", "英伟达新闻推送", "英伟达每日新闻", "英伟达日报", "英伟达每日", "nvidia daily news", "nvidia daily", "每日 NVIDIA 摘要", "深度版新闻摘要", "深度版推送", "深度版 v3.1", "静默推送", "cc-send-safe", "news_archive"]
+title: NVIDIA 每日新闻深度版静默推送（v3.1 静默三段式）
+description: 每日推送 NVIDIA 近 24 小时新闻时使用：先写完整深度归档，再按「头条快报 + 深度展开 + 1 张配图」经 cc-send-safe 静默推送到 cc-connect（微信/飞书）通道，全程不发任何中间态/收尾状态消息，规避微信通道 ret=-2 节流锁死。
+trigger_keywords: ["NVIDIA 每日新闻", "英伟达新闻推送", "英伟达新闻摘要", "英伟达日报", "英伟达每日", "英伟达每日新闻", "nvidia daily news", "nvidia daily", "NVIDIA 24h", "NVIDIA 新闻", "每日 NVIDIA", "每日 NVIDIA 摘要", "深度版新闻", "深度版新闻摘要", "深度版新闻推送", "深度版推送", "深度版 v3.1", "静默推送 NVIDIA", "nvidia 深度版", "cc-send-safe 推送"]
+keywords: ["NVIDIA 新闻", "NVIDIA 每日新闻", "英伟达新闻推送", "英伟达每日新闻", "英伟达日报", "英伟达每日", "nvidia daily news", "nvidia daily", "每日 NVIDIA 摘要", "深度版新闻摘要", "深度版新闻推送", "深度版推送", "深度版 v3.1", "静默推送", "cc-send-safe", "news_archive"]
 source: date=2026-06-30
-version: 11.0
-updated_at: 2026-08-29T00:00:00
+version: 12.0
+updated_at: 2026-09-02T00:00:00
 ---
 
 # NVIDIA 每日新闻深度静默推送 v3.1
 
-## 适用场景
+## 适用场景 / 何时使用
 
-每日（通常由 cron 触发）推送 NVIDIA 近 24 小时重要新闻到 cc-connect 的微信/飞书通道。
+每日（通常由 cron 触发，也可由用户直接要求「推送 NVIDIA 每日新闻摘要（深度版）」）推送 NVIDIA 近 24 小时重要新闻到 cc-connect 的微信/飞书通道。
 
 ## 目标
 
@@ -67,7 +67,7 @@ cc-send-safe --image /tmp/nvidia_daily.jpg   # 一次性，失败即放弃，禁
 ## 绝对禁止
 
 - 不能发 2 张及以上图片（第 3 次图片请求必触发节流锁死）
-- 不能在图片失败后重试图片
+- 不能在图片失败后重试图片（每次失败请求都会加深节流）
 - 不能在图片失败后再发任何文字（会触发节流升级）
 - 不能省略 `sleep 30`（连发触发短窗口节流）
 - 不能在文字里只列关键词（每条必须带 背景 / 数据 / 对比 中至少 2 项）
