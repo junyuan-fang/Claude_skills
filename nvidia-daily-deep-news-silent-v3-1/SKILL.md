@@ -1,22 +1,22 @@
 ---
 name: nvidia-daily-deep-news-silent-v3-1
-title: NVIDIA 每日深度新闻推送（v3.1 静默三段式）
-description: 每日搜集 NVIDIA 近 24 小时重要新闻，写完整深度归档后，经 cc-send-safe 以「头条快报 + 深度展开 + 1 张配图」三段式静默推送，全程不发任何中间/收尾状态消息，规避 ret=-2 通道节流
-trigger_keywords: ["NVIDIA 新闻", "每日 NVIDIA", "英伟达日报", "英伟达每日", "nvidia daily", "深度新闻推送", "深度版 v3.1", "新闻摘要推送", "cc-send-safe"]
+title: NVIDIA 每日深度新闻静默推送（v3.1 静默三段式）
+description: 每日推送 NVIDIA 近 24 小时新闻时使用：先写完整深度归档，再按「头条快报 + 深度展开 + 1 张配图」经 cc-send-safe 静默推送到微信/飞书通道，全程不发任何中间态/收尾状态消息，规避 ret=-2 节流锁死。
+trigger_keywords: ["NVIDIA 新闻", "每日 NVIDIA", "英伟达日报", "英伟达每日", "英伟达每日新闻", "nvidia daily", "nvidia daily news", "深度新闻推送", "深度版新闻推送", "深度版 v3.1", "新闻摘要推送", "cc-send-safe", "静默推送"]
 source: date=2026-07-23
-version: 2
+version: 3
 updated_at: 2026-08-12T00:00:00
 ---
 
-# NVIDIA 每日深度新闻推送（v3.1 静默三段式）
+# NVIDIA 每日深度新闻静默推送（v3.1 静默三段式）
 
-## 适用场景
+## 适用场景与目标
 
-每日 NVIDIA 新闻摘要任务。目标是让用户对每条消息都有具体理解，而不是只看到关键词堆砌。**全程静默**：不发任何中间态/收尾状态消息，只发实际新闻内容。
+每日 NVIDIA 新闻摘要任务。目标是让用户对每条消息都有**具体理解**（背景 / 数据 / 业内意义），而不是只看到关键词堆砌。**全程静默**：只发实际新闻内容，不发任何中间态/收尾状态消息。
 
 ## 步骤
 
-### Step 1: 搜索 + 撰写归档
+### Step 1: 搜索 + 撰写深度归档
 
 1. 搜索 NVIDIA 最近 24 小时重要新闻（新品 / 合作 / 技术 / 财报 / 股价 / 地缘），优先来源：`nvidianews.nvidia.com`、`blogs.nvidia.com`、Bloomberg、CNBC、Stocktitan、TechCrunch。
 2. 每条新闻做**尽调式扩展**（标准：让不熟该领域的人 30 秒掌握 why-it-matters），**至少覆盖以下 2 项**：
@@ -25,7 +25,7 @@ updated_at: 2026-08-12T00:00:00
    - **数据/财务指标**：合作金额、产能（GW / 产线 / 倍数）、新增岗位、ROI、目标价升降幅度、股价反应。
    - **业内意义**：竞争对比（vs AMD / Broadcom / 华为昇腾 / SK 海力士）、产业链位置、为什么是关键信号。
 3. 把**完整深度版**（全部细节 + 所有引用）写入：
-   ```
+   ```bash
    /home/xinmiao/code/claude_bot/news_archive/nvidia-$(date +%Y-%m-%d).md
    ```
    归档不限字数，越详细越好。
@@ -62,8 +62,8 @@ cc-send-safe --image /tmp/nvidia_daily.jpg   # 一次性尝试，失败即放弃
 
 ### Step 5: 静默收尾
 
-15. 不发任何 reply 状态消息（不发「已推送…」「任务完成」「归档路径」）。用户只想看实际新闻内容，状态信息都是噪音。
-16. 本地确认归档，仅走 stdout 日志、不推送：
+10. 不发任何 reply 状态消息（不发「已推送…」「任务完成」「归档路径是…」）。用户只想看实际新闻内容，状态信息都是纯噪音。
+11. 本地确认归档，仅走 stdout 日志、不推送：
     ```bash
     ls -la /home/xinmiao/code/claude_bot/news_archive/ | tail -3
     ```
@@ -75,4 +75,4 @@ cc-send-safe --image /tmp/nvidia_daily.jpg   # 一次性尝试，失败即放弃
 - 图片失败后再补发任何文字（会触发节流升级）
 - 省略 `sleep 30`（连发触发短窗口节流）
 - 文字里只列关键词（违背深度版宗旨——每条至少带背景 / 数据 / 对比中的 2 项）
-- 发「段X已发」「任务完成」「已推送…」等任何中间/收尾状态消息（只发实际新闻内容）
+- 发「段 X 已发」「任务完成」「已推送…」等任何中间态或收尾状态消息（只发实际新闻内容）
