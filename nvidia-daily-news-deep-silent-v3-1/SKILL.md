@@ -1,12 +1,12 @@
 ---
 name: nvidia-daily-news-deep-silent-v3-1
-title: NVIDIA 每日新闻深度推送（静默 v3.1）
-description: 每日推送 NVIDIA 近 24 小时新闻时使用：先写完整深度归档，再按「头条快报 + 深度展开 + 1 张配图」经 cc-send-safe 静默推送到 cc-connect（微信/飞书）通道，全程不发任何中间态/收尾状态消息，规避微信通道 ret=-2 节流锁死。
+title: NVIDIA 每日新闻深度版静默推送（v3.1）
+description: 每日推送 NVIDIA 近 24 小时新闻时使用：先写完整深度归档，再按「头条快报 + 深度展开 + 1 张配图」三段式经 cc-send-safe 静默推送到 cc-connect（微信/飞书）通道，全程不发任何中间态/收尾状态消息，规避微信/飞书通道 ret=-2 节流锁死。
 trigger_keywords: ["NVIDIA 每日新闻", "英伟达新闻推送", "英伟达新闻摘要", "英伟达日报", "英伟达每日", "英伟达每日新闻", "nvidia daily news", "nvidia daily", "NVIDIA 24h", "NVIDIA 新闻", "每日 NVIDIA", "每日 NVIDIA 摘要", "深度版新闻", "深度版新闻摘要", "深度版新闻推送", "深度版推送", "深度版 v3.1", "静默推送 NVIDIA", "nvidia 深度版", "cc-send-safe 推送", "cc-send-safe 推送新闻"]
 keywords: ["NVIDIA 新闻", "NVIDIA 每日新闻", "英伟达新闻推送", "英伟达每日新闻", "英伟达日报", "英伟达每日", "nvidia daily news", "nvidia daily", "每日 NVIDIA 摘要", "深度版新闻摘要", "深度版新闻推送", "深度版推送", "深度版 v3.1", "静默推送", "cc-send-safe", "cc-send-safe 推送新闻", "news_archive"]
 source: date=2026-06-30
-version: 13.0
-updated_at: 2026-09-03T00:00:00
+version: 14.0
+updated_at: 2026-09-05T00:00:00
 ---
 
 # NVIDIA 每日新闻深度静默推送 v3.1
