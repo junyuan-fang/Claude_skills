@@ -27,7 +27,7 @@
 - 3D 点云分割与具身模型跟进：Xiaomi-Robotics-1、DriftWorld、FastWAM、GigaWorldPolicy、AlayaWorld、MVA、ABot-World-0、HOST、Orca、FlowWAM、Kairos、DataPyramid、FeelWorld、HiFi-UMI、DC-WAM、πR²、TurboVLA、CheckVLA、Auto-JEPA、WCM、Faster-WAM、Ego2Robot、WorldCycle、BridgeVLA++、WorldTrace、WorldSimProbe、EchoWM、LAWA、GaussianWAM、TrAct、LeFlow、WALL-SS、CLAP、SpatialCrafter、PAWBench、FlashVLA、AcrossVAM1、VideoDiffScaling、PHR-VLA、ContactMultiCritic、Motus2、LightNav-0、ShellGameWM、CAER、Zeva、Facet-0、REFACTOR-VLA、Streaming4D、SolarWM 等
 - 当前关注 WAM"中间表征之争"：latent action(LAWA) vs 3DGS 蒸馏(GaussianWAM) vs visual tracks(TrAct)，均针对 Fast-WAM 砍未来分支后泛化下降的问题
 - 论文笔记支持复用：同一论文多日再推时复用已有笔记（Xiaomi-Robotics-1、AlayaWorld、MVA、DataPyramid、ABot-World-0、πR² 均已多次复用），不重复生成
-- 必读笔记篇数与长度浮动：常见 3-6 篇 401-609 行，单篇可长至 811-966 行
+- 必读笔记篇数与长度浮动：常见 3-5 篇 411-864 行，单篇可长至 966 行
 - 笔记生成可交由后台 agent 并行（单日常见 3-6 个 agent），主流程需逐个回收回报并做行数/完整性校验后才算收尾
 - 笔记完整性校验包含固定小节存在性检查（`## 关键公式`、`## 实验结果`）、公式/配图达标、链接与分流表 wikilink 对齐实际文件名
 - 周末档降级策略：arXiv 宕机时用 HF Trending 兜底，再推占比高
@@ -74,6 +74,6 @@
 - 定时任务执行结果需事后核对：多次出现响应错位、空响应（2026-08-12 NVIDIA 档仅回零宽字符）、只回 ✅ 表情无内容、只回响应时间无摘要的情况
 - NVIDIA 档已连续多日（09-01 至 09-03）只回单个 ✅，09-04 更是无任何回报，成为该档最主要且持续恶化的回报退化模式，需人工核对归档与推送
 - 论文推荐档回报格式偶有退化：09-04 只回了最后一篇笔记（SolarWM 562 行）的收尾句，未给推荐文件路径/篇数/目录页三要素，违背一句话三要素约定
-- 静默规范近期被反复违反：08-28、08-31 NVIDIA 档均泄漏英文中间态过程句（"Sending now."、"Both under 700. Sending segment 1."），且未给响应时间，需重点防范
+- 静默规范近期被反复违反：08-28、08-31 NVIDIA 档均泄漏英文中间态过程句（"Sending now."、"Both under 700. Sending segment 1."、"Now writing the archive."），且未给响应时间，需重点防范
 - 新闻类任务只回"响应时间 X 秒"无摘要已成常态（2026-07-27 起持续），需人工核对归档文件与实际推送是否真正执行
 - 论文推荐档回报格式在 8/31 至 9/3 最稳定（一句话三要素 + 笔记行数/质量门校验），是当前最接近合格的档次，但 9/4 已出现偏离
