@@ -21,10 +21,10 @@
 - 每日 NVIDIA 新闻推送（v3.1 静默深度版）：归档 + 头条快报 + 深度展开 + 1 张配图三段式，归档到 `~/code/claude_bot/news_archive/nvidia-YYYY-MM-DD.md`
 - 每日具身智能新闻推送（v1.3）：行业+论文混编，论文强制 14 天窗口（HF daily 优先+arXiv abstract 精校），归档每篇必带 `- Project: <url>` 供下游 awesome-physical-ai ingest
 - daily-papers 三步流水线（fetch→review→notes）：日更 Obsidian 论文笔记与目录页；推荐文件位于 `~/code/claude_bot/Obsidian_Vault/DailyPapers/YYYY-MM-DD-论文推荐.md`
-- 概念/论文库持续增长（2026-07-31 为 813/81，08-27 为 1301/113，09-02 已达 1719/133）；概念库单日新增 18-49 条（近日稳定 33-38 条）
+- 概念/论文库持续增长（2026-07-31 为 813/81，08-27 为 1301/113，09-02 已达 1719/133）；概念库单日新增 18-49 条（近日稳定 33-44 条）
 - 论文笔记已支持双 vault 同步
-- 推荐文件稳定做三档分流，近日 16-20 篇（3-5 必读 / 7-10 值得看 / 6-8 可跳过），并注明因超 14 天窗口或跑题被排除的论文（08-31 排除 13 篇、09-03 排除 14 篇）
-- 3D 点云分割与具身模型跟进：Xiaomi-Robotics-1、DriftWorld、FastWAM、GigaWorldPolicy、AlayaWorld、MVA、ABot-World-0、HOST、Orca、FlowWAM、Kairos、DataPyramid、FeelWorld、HiFi-UMI、DC-WAM、πR²、TurboVLA、CheckVLA、Auto-JEPA、WCM、Faster-WAM、Ego2Robot、WorldCycle、BridgeVLA++、WorldTrace、WorldSimProbe、EchoWM、LAWA、GaussianWAM、TrAct、LeFlow、WALL-SS、CLAP、SpatialCrafter、PAWBench、FlashVLA、AcrossVAM1、VideoDiffScaling、PHR-VLA、ContactMultiCritic、Motus2、LightNav-0、ShellGameWM、CAER、Zeva、Facet-0、REFACTOR-VLA、Streaming4D、SolarWM、UnifiedRobotLearning、H3-World、GIFT、WISE 等
+- 推荐文件稳定做三档分流，近日 16-20 篇（3-5 必读 / 7-10 值得看 / 6 可跳过），并注明因超 14 天窗口或跑题被排除的论文（08-31 排除 13 篇、09-03 排除 14 篇）
+- 3D 点云分割与具身模型跟进：Xiaomi-Robotics-1、DriftWorld、FastWAM、GigaWorldPolicy、AlayaWorld、MVA、ABot-World-0、HOST、Orca、FlowWAM、Kairos、DataPyramid、FeelWorld、HiFi-UMI、DC-WAM、πR²、TurboVLA、CheckVLA、Auto-JEPA、WCM、Faster-WAM、Ego2Robot、WorldCycle、BridgeVLA++、WorldTrace、WorldSimProbe、EchoWM、LAWA、GaussianWAM、TrAct、LeFlow、WALL-SS、CLAP、SpatialCrafter、PAWBench、FlashVLA、AcrossVAM1、VideoDiffScaling、PHR-VLA、ContactMultiCritic、Motus2、LightNav-0、ShellGameWM、CAER、Zeva、Facet-0、REFACTOR-VLA、Streaming4D、SolarWM、UnifiedRobotLearning、H3-World、GIFT、WISE、TacPAC、WorldSculpt、TourPhysics、LSS 等
 - 当前关注 WAM"中间表征之争"：latent action(LAWA) vs 3DGS 蒸馏(GaussianWAM) vs visual tracks(TrAct)，均针对 Fast-WAM 砍未来分支后泛化下降的问题
 - 论文笔记支持复用：同一论文多日再推时复用已有笔记（Xiaomi-Robotics-1、AlayaWorld、MVA、DataPyramid、ABot-World-0、πR² 均已多次复用），不重复生成
 - 必读笔记篇数与长度浮动：常见 3-5 篇 411-864 行，单篇可长至 966 行
@@ -37,7 +37,7 @@
 ## 沟通习惯
 - 用超长结构化 prompt 指定完整流程：Step 1-5 + 【绝对禁止】清单，细化到 sleep 秒数、字符上限、发送顺序
 - 通过飞书 open_id 触发 cron/手动任务（ou_90d9f956...），固定日程：07:00 NVIDIA、07:15 论文推荐、07:45 具身新闻；触发时刻偶有分钟级漂移
-- 近期（08-26 起）以"NVIDIA + 论文推荐"两档为常态，具身档基本缺席（09-01 至 09-07 连续只跑两档）
+- 08-26 起以"NVIDIA + 论文推荐"两档为常态，具身档长期缺席（09-01 至 09-07 连续只跑两档），09-08 恢复三档齐跑
 - 论文推荐档已简化为一句话调用："走完 daily-papers 三步流水线，静默，完成后一句话报路径 + 笔记篇数 + 目录页刷新状态"
 - 周末（8/22、8/23、8/29、8/30、9/5、9/6）未见触发记录，日程以工作日为主；美股休市日（9/7 劳动节）仍照常触发
 - 部分日期只跑单档（2026-08-18 仅 NVIDIA），说明日程可临时缩减
@@ -69,10 +69,11 @@
 - Claude 工作产物统一放 `~/code/claude_bot/` 下管理
 - 2026-07-22 OAuth token 撤销致全天任务 401；2026-08-06 两档均报 API ConnectionRefused；需持续关注认证与 API 连通状态
 - 用量配额耗尽是常见失败模式：2026-08-07 两档均报"You've hit your limit"，07:00-08:30 密集任务易撞额度上限
-- NVIDIA 档耗时波动极大（8/18 1533 秒、8/31 296 秒、9/2 约 497 秒、9/7 约 349 秒），短耗时需核对归档是否真跑完
-- 论文推荐档耗时不稳：9/1 约 3117 秒、9/2 约 2331 秒、9/3 约 2417 秒、9/4 约 2459 秒、9/7 1963 秒，但 8/28 仅 71 秒——异常短耗时须核对推荐文件与笔记是否真正生成
+- NVIDIA 档耗时波动极大（8/18 1533 秒、8/31 296 秒、9/2 约 497 秒、9/7 约 349 秒、9/8 322 秒），短耗时需核对归档是否真跑完
+- 论文推荐档耗时不稳：9/1 约 3117 秒、9/2 约 2331 秒、9/3 约 2417 秒、9/4 约 2459 秒、9/7 1963 秒，但 8/28 仅 71 秒、9/8 仅 41 秒——异常短耗时须核对推荐文件与笔记是否真正生成
 - 定时任务执行结果需事后核对：多次出现响应错位、空响应（2026-08-12 仅回零宽字符）、只回 ✅ 表情、只回响应时间无摘要的情况
-- NVIDIA 档 09-01 至 09-03 只回单个 ✅、09-04 完全无回报，是该档最主要的回报退化模式；09-07 恢复正常（完整 5 条头条内容回显），说明退化非不可逆，需持续人工核对归档与推送
-- 论文推荐档回报格式偶有退化：09-04 只回了最后一篇笔记的收尾句，未给路径/篇数/目录页三要素；09-07 已恢复三要素规范
+- NVIDIA 档 09-01 至 09-03 只回单个 ✅、09-04 无回报、09-08 只回"响应时间 322 秒"，是该档最主要的回报退化模式；09-07 曾恢复完整头条回显，说明退化非不可逆，需持续人工核对归档与推送
+- 具身档同样出现只回响应时间的退化（09-08 仅"响应时间 486 秒"），无内容回显时须核对 `embodied-YYYY-MM-DD.md` 归档与 Project 行
+- 论文推荐档回报格式偶有退化：09-04 只回了最后一篇笔记的收尾句，未给路径/篇数/目录页三要素；09-07、09-08 已恢复三要素规范
 - 静默规范近期被反复违反：08-28、08-31 NVIDIA 档均泄漏英文中间态过程句，需重点防范
-- 论文推荐档回报格式在 8/31 至 9/3、9/7 最稳定（一句话三要素 + 笔记行数/质量门校验），是当前最接近合格的档次
+- 论文推荐档回报格式在 8/31 至 9/3、9/7、9/8 最稳定（一句话三要素 + 笔记行数/质量门校验），是当前最接近合格的档次
