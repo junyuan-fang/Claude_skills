@@ -1,12 +1,12 @@
 ---
 name: nvidia-daily-news-deep-silent-v3-1
 title: NVIDIA 每日新闻深度版静默推送（v3.1）
-description: 每日推送 NVIDIA 近 24 小时新闻时使用：先写完整深度归档，再按「头条快报 + 深度展开 + 1 张配图」三段式经 cc-send-safe 静默推送到 cc-connect（微信/飞书）通道，全程不发任何中间态/收尾状态消息，规避微信/飞书通道 ret=-2 节流锁死。
+description: 每日推送 NVIDIA 近 24 小时新闻时使用：先写完整深度归档，再按「头条快报 + 深度展开 + 1 张配图」三段式经 cc-send-safe 静默推送到 cc-connect（微信/飞书）通道，全程不发任何中间态/收尾状态消息，规避通道 ret=-2 节流锁死。
 trigger_keywords: ["NVIDIA 每日新闻", "英伟达新闻推送", "英伟达新闻摘要", "英伟达日报", "英伟达每日", "英伟达每日新闻", "nvidia daily news", "nvidia daily", "NVIDIA 24h", "NVIDIA 新闻", "每日 NVIDIA", "每日 NVIDIA 摘要", "深度版新闻", "深度版新闻摘要", "深度版新闻推送", "深度版推送", "深度版 v3.1", "静默推送 NVIDIA", "nvidia 深度版", "cc-send-safe 推送", "cc-send-safe 推送新闻"]
 keywords: ["NVIDIA 新闻", "NVIDIA 每日新闻", "英伟达新闻推送", "英伟达每日新闻", "英伟达日报", "英伟达每日", "nvidia daily news", "nvidia daily", "每日 NVIDIA 摘要", "深度版新闻摘要", "深度版新闻推送", "深度版推送", "深度版 v3.1", "静默推送", "cc-send-safe", "cc-send-safe 推送新闻", "news_archive"]
 source: date=2026-06-30
-version: 14.0
-updated_at: 2026-09-05T00:00:00
+version: 15.0
+updated_at: 2026-09-09T00:00:00
 ---
 
 # NVIDIA 每日新闻深度静默推送 v3.1
@@ -23,7 +23,7 @@ updated_at: 2026-09-05T00:00:00
 
 ### Step 1: 搜索 + 撰写归档
 
-1. 搜 NVIDIA 最近 24 小时重要新闻（新品 / 合作 / 技术 / 财报 / 股价 / 地缘），优先信源：`nvidianews.nvidia.com`、`blogs.nvidia.com`、Bloomberg、CNBC、Stocktitan、TechCrunch。
+1. 搜 NVIDIA 最近 24 小时重要新闻（新品 / 合作 / 技术 / 财报 / 股价 / 地缘）。信源优先级：`nvidianews.nvidia.com` > `blogs.nvidia.com` > Bloomberg / CNBC / Stocktitan / TechCrunch。
 2. 每条新闻做**尽调式扩展**，标准是「让一个不熟该领域的人 30 秒掌握 why-it-matters」，每条至少覆盖以下 4 类中的 2 项（能全覆盖更好）：
    - **公司/产品背景 1 句**：例如「IREN 是澳洲挖矿转型 AI 算力的数据中心运营商，市值约 X」「Corning 即康宁，光纤玻璃供应商，主营特种玻璃和光纤」「GR00T 是 NVIDIA 通用人形机器人基础模型系列」
    - **技术细节**：模型参数量、训练数据规模/来源、benchmark 数字、推理延迟、对标 SOTA；硬件平台（GB300 / Rubin / Blackwell / DGX Spark）；网络与光互连规格
@@ -50,7 +50,7 @@ updated_at: 2026-09-05T00:00:00
 ### Step 3: 准备 1 张配图
 
 7. 从今日新闻抓最具代表性的 1 张图（产品图 / CEO 照 / 发布会 / 新闻封面），下载到 `/tmp/nvidia_daily.jpg`。
-8. `file /tmp/nvidia_daily.jpg` 确认是图片；如 >100KB 用 `convert` 压到 ≤80KB JPEG。
+8. `file /tmp/nvidia_daily.jpg` 确认真的是图片；如 >100KB 用 `convert` 压到 ≤80KB JPEG。
 9. **只准备 1 张**，绝不多张（第 3 次图片推送必触发节流锁死）。
 
 ### Step 4: 严格顺序发送（共 3 次推送，每次间隔 30s）
@@ -67,7 +67,7 @@ cc-send-safe --image /tmp/nvidia_daily.jpg   # 一次性，失败即放弃，禁
 11. `sleep 30`
 12. `cc-send-safe -m "<深度展开全文>"`
 13. `sleep 30`
-14. `cc-send-safe --image /tmp/nvidia_daily.jpg` —— 一次性，失败即放弃，**绝不重试**（每次失败请求都会加深节流）；图片失败也**不发任何状态消息 / 失败说明**。
+14. `cc-send-safe --image /tmp/nvidia_daily.jpg` —— 一次性，失败即放弃，**绝不重试**（每次失败请求都会加深节流）；图片失败也**不发任何状态消息 / 失败说明**，用户能从内容缺失自行判断。
 
 ### Step 5: 静默收尾
 
@@ -82,6 +82,7 @@ cc-send-safe --image /tmp/nvidia_daily.jpg   # 一次性，失败即放弃，禁
 - 不能发 2 张及以上图片（第 3 次图片请求必触发节流锁死）
 - 不能在图片失败后重试图片（每次失败请求都会加深节流）
 - 不能在图片失败后再发任何文字（会触发节流升级）
+- 不能在图片失败后发任何状态消息 / 失败说明
 - 不能省略 `sleep 30`（连发触发短窗口节流）
 - 不能在文字里只列关键词（每条必须带 背景 / 数据 / 对比 中至少 2 项）
 - 不能发「段 X 已发」「任务完成」「已推送…」等任何中间 / 收尾状态消息，用户只要实际内容
